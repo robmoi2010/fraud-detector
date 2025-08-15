@@ -1,0 +1,15 @@
+# Ignore build outputs
+/build/
+dist/
+/files
+
+# Ignore logs
+*.csv
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore environment variables and configs
+.env
+config/local.json

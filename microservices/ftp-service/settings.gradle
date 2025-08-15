@@ -1,0 +1,3 @@
+rootProject.name = 'ftp-service'
+include ':GoglotekCypher'
+project(':GoglotekCypher').projectDir = new File(settingsDir, '../GoglotekCypher')

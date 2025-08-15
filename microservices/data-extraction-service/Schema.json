@@ -1,0 +1,57 @@
+{
+  "fileType": "csv",
+  "hasHeaders": true,
+  "dateFormat": "dd/MM/yyyy mm:ss",
+  "columns": [
+    {
+      "name": "RECEIPT_NUMBER",
+      "dataType": "text",
+      "fileIndex": 6,
+      "isAmount": false,
+      "isTransactionId": true,
+      "isTransactionTimestamp": false,
+      "isProviderClientAccount": false,
+      "isGroupAccount": false
+    },
+    {
+      "name": "CREDIT_AMOUNT",
+      "dataType": "number",
+      "fileIndex": 12,
+      "isAmount": true,
+      "isTransactionId": false,
+      "isTransactionTimestamp": false,
+      "isProviderClientAccount": false,
+      "isGroupAccount": false
+    },
+    {
+      "name": "END_TIMESTAMP",
+      "dataType": "timestamp",
+      "fileIndex": 9,
+      "isAmount": false,
+      "isTransactionId": false,
+      "isTransactionTimestamp": true,
+      "isProviderClientAccount": false,
+      "isGroupAccount": false
+    },
+    {
+      "name": "PRIMARY_PARTY_IDENTIFIER",
+      "dataType": "string",
+      "fileIndex": 19,
+      "isAmount": false,
+      "isTransactionId": false,
+      "isTransactionTimestamp": false,
+      "isProviderClientAccount": true,
+      "isGroupAccount": false
+    },
+    {
+      "name": "RECEIVER_PARTY_IDENTIFIER",
+      "dataType": "string",
+      "fileIndex": 20,
+      "isAmount": false,
+      "isTransactionId": false,
+      "isTransactionTimestamp": false,
+      "isProviderClientAccount": false,
+      "isGroupAccount": true
+    }
+  ]
+}
