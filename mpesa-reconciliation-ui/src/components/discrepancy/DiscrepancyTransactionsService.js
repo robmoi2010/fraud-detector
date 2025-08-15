@@ -1,0 +1,20 @@
+import { config } from '../configuration/config';
+import RestClient from '../util/RestClient';
+class DiscrepancyTransactionsService {
+	constructor() {
+		this.restClient = new RestClient();
+	}
+	async retrieveDiscrepancyTransactions(page, pageSize, orderBy, direction, filterModel, accessToken) {
+		var obj = {
+			method: 'POST',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+				"Authorization": "Bearer " + accessToken
+			},
+			body: JSON.stringify(filterModel.items)
+		};
+		return this.restClient.sendRequest(config.BaseURL + "reconciledtransactions/filter/?page=" + page + "&limit=" + pageSize + "&order_by=" + orderBy + "&direction=" + direction + "", obj);
+	}
+}
+export default DiscrepancyTransactionsService;

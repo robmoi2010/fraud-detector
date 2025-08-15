@@ -1,0 +1,35 @@
+export const config =
+{
+    BaseURL: "http://localhost/api/",
+    OauthId: "user",
+    OauthSecret: "password",
+    TokeName: "snToken",
+    UserDataName: "UserData",
+    AdminIdentifier: "ADMIN",
+    UserRoleName: "ROLE_USER",
+    SuperAdminRoleName: "ROLE_SUPER_ADMIN",
+    InvalidTokenResp: "invalid_token",
+    //route urls
+    FilesRouteURL: "/files",
+    FileTransRouteURL: "/filetransactions",
+    SignInRouteURL: "/signin",
+    DashboardRouteURL: "/dashboard",
+    DiscrepancyTransRouteURL: "/discrepancytransactions",
+    MainTransRouteURL: "/maintransactions",
+    FraudulentTransRouteURL: "/fraudulenttransactions",
+    MissingTransRouteURL: "/missingtransactions",
+    SignUpRouteURL: "/signup",
+    UsersRouteURL: "/users",
+    RolesRouteURL: "/roles",
+    PaybillsRouteURL: "/paybills",
+    //tab names
+    FilesTabName: "Files",
+    DashboardTabName: "Dashboard",
+    FileTransTabName: "File Transactions",
+    FraudulentTransTabName: "Fraudulent Transactions",
+    MissingTransTabName: "Missing Transactions",
+    MainTransTabName: "Main Transactions",
+    UsersTabName: "Users",
+    RolesTabName: "Roles",
+    PaybillsTabName: "Paybills"
+}

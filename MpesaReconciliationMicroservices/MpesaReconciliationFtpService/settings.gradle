@@ -1,0 +1,3 @@
+rootProject.name = 'MpesaReconciliationFtpService'
+include ':GoglotekCypher'
+project(':GoglotekCypher').projectDir = new File(settingsDir, '../GoglotekCypher')
