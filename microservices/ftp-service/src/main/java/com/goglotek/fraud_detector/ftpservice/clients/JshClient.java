@@ -1,7 +1,7 @@
 package com.goglotek.fraud_detector.ftpservice.clients;
 
 import com.goglotek.fraud_detector.ftpservice.configuration.Config;
-import com.goglotek.fraud_detector.ftpservice.cypher.EncryptionDecryption;
+import com.goglotek.fraud_detector.ftpservice.cryptography.Cryptography;
 import com.goglotek.fraud_detector.ftpservice.domain.TransactionsFile;
 import com.goglotek.fraud_detector.ftpservice.exception.GoglotekException;
 import com.google.common.io.ByteStreams;
@@ -9,7 +9,6 @@ import com.jcraft.jsch.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
@@ -23,12 +22,11 @@ public class JshClient implements Client {
 
     private JSch jsch;
     @Autowired
-    private EncryptionDecryption encryptionService;
+    private Cryptography cryptography;
+
     @Autowired
     private Config config;
 
-    @Value("${goglotek.ftp.file_type}")
-    private String fileType;
 
     public JshClient() {
         this.jsch = new JSch();
@@ -78,7 +76,7 @@ public class JshClient implements Client {
 
                 try (InputStream in = channel.get(config.getRemoteFolder() + filename)) {
                     byte[] unencrypted = ByteStreams.toByteArray(in);
-                    byte[] encrypted = encryptionService.encrypt(unencrypted, config.getEncryptionKey(), config.getInitVector());
+                    byte[] encrypted = cryptography.encrypt(unencrypted, config.getEncryptionKey(), config.getInitVector());
                     try (FileOutputStream fout = getFileOutputStream(destFile)) {
                         fout.write(encrypted);
                     }
@@ -123,7 +121,7 @@ public class JshClient implements Client {
     }
 
     private boolean isRequiredFile(String filename) {
-        return filename != null && filename.toLowerCase(Locale.ENGLISH).contains(fileType.toLowerCase(Locale.ENGLISH));
+        return filename != null && filename.toLowerCase(Locale.ENGLISH).contains(config.getFileType().toLowerCase(Locale.ENGLISH));
     }
 
     private String buildLocalPath(String rootFolder, String subFolder) {

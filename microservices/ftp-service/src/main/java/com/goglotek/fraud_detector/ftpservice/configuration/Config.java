@@ -27,6 +27,8 @@ public class Config {
     private String serviceExchange;
     @Value("${goglotek.ftp.routing_key}")
     private String ftpRoutingKey;
+    @Value("${goglotek.ftp.file_type}")
+    private String fileType;
 
     public Config() {
 
@@ -118,5 +120,13 @@ public class Config {
 
     public void setFtpRoutingKey(String ftpRoutingKey) {
         this.ftpRoutingKey = ftpRoutingKey;
+    }
+
+    public String getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
     }
 }

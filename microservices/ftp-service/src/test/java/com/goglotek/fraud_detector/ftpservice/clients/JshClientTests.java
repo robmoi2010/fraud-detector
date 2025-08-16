@@ -1,7 +1,7 @@
 package com.goglotek.fraud_detector.ftpservice.clients;
 
 import com.goglotek.fraud_detector.ftpservice.configuration.Config;
-import com.goglotek.fraud_detector.ftpservice.cypher.EncryptionDecryption;
+import com.goglotek.fraud_detector.ftpservice.cryptography.Cryptography;
 import com.goglotek.fraud_detector.ftpservice.domain.TransactionsFile;
 import com.jcraft.jsch.*;
 import org.junit.jupiter.api.AfterAll;
@@ -34,7 +34,7 @@ public class JshClientTests {
     private JSch jsch;
 
     @MockBean
-    private EncryptionDecryption encryptionService;
+    private Cryptography cryptography;
 
     @MockBean
     private Session session;
@@ -55,7 +55,7 @@ public class JshClientTests {
         when(config.getRemoteFolder()).thenReturn("/remote/");
         when(config.getEncryptionKey()).thenReturn("key123");
         when(config.getInitVector()).thenReturn("iv123");
-        ReflectionTestUtils.setField(jshClient, "fileType", "txt");
+        when(config.getFileType()).thenReturn("txt");
         jshClient.setJsch(jsch);
 
         // Mock JSch session
@@ -75,7 +75,7 @@ public class JshClientTests {
 
         byte[] fileBytes = "test data".getBytes();
         when(channelSftp.get("/remote/transactions.txt")).thenReturn(new ByteArrayInputStream(fileBytes));
-        when(encryptionService.encrypt(any(byte[].class), anyString(), anyString())).thenReturn(fileBytes);
+        when(cryptography.encrypt(any(byte[].class), anyString(), anyString())).thenReturn(fileBytes);
 
         doNothing().when(channelSftp).rm("/remote/transactions.txt");
 
@@ -95,7 +95,7 @@ public class JshClientTests {
 
         verify(channelSftp, times(1)).get("/remote/transactions.txt");
         verify(channelSftp, times(1)).rm("/remote/transactions.txt");
-        verify(encryptionService, times(1)).encrypt(any(byte[].class), anyString(), anyString());
+        verify(cryptography, times(1)).encrypt(any(byte[].class), anyString(), anyString());
     }
 
     @AfterAll
