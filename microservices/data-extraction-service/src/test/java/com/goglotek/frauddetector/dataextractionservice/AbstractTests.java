@@ -10,6 +10,7 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 
 public abstract class AbstractTests {
@@ -21,7 +22,7 @@ public abstract class AbstractTests {
     protected String clientAccountColumnName = "ACCOUNT";
     protected String timeColumnName = "TIMESTAMP";
     protected String sampleCSV = "";
-    protected String dateFormat = "dd/MM/yyyy mm:ss";
+    protected String dateFormat = "dd/MM/yyyy HH:mm:ss";
     protected int transactionsCount = 10;
     protected int amountMultiplier = 1000;
     protected String groupAccount = "12345";
@@ -55,7 +56,12 @@ public abstract class AbstractTests {
             sb.append((i + 1) * amountMultiplier).append(",");
             sb.append(groupAccount).append(",");
             sb.append(transIdBase + i).append(",");
-            sb.append(new SimpleDateFormat(schema.getDateFormat()).format(new Date())).append(",");
+
+            Calendar c = Calendar.getInstance();
+            //to put big gap between transactions timestamp
+            c.add(Calendar.HOUR, i);
+            sb.append(new SimpleDateFormat(schema.getDateFormat()).format(c.getTime())).append(",");
+
             sb.append(clientAccountBase + i).append(",");
             sb.append("Extra data " + (i + 1)).append(",");
             sb.append("Extra data1 " + (i + 1));

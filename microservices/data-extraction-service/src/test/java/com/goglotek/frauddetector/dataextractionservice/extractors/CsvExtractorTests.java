@@ -3,10 +3,7 @@ package com.goglotek.frauddetector.dataextractionservice.extractors;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goglotek.frauddetector.dataextractionservice.AbstractTests;
 import com.goglotek.frauddetector.dataextractionservice.exception.GoglotekException;
-import com.goglotek.frauddetector.dataextractionservice.model.Transaction;
-import com.goglotek.frauddetector.dataextractionservice.schema.Column;
-import com.goglotek.frauddetector.dataextractionservice.schema.Schema;
-import org.jetbrains.annotations.NotNull;
+import com.goglotek.frauddetector.dataextractionservice.dto.Transaction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -69,5 +64,19 @@ public class CsvExtractorTests extends AbstractTests {
         }
     }
 
+    @Test
+    public void fromDateShouldBeBeforeToDate() throws GoglotekException, IOException {
+        List<Transaction> l = extractor.extractTransactions(sampleCSV.getBytes(StandardCharsets.UTF_8), schema);
+        assertTrue(l != null && l.size() == transactionsCount);
+        assertTrue(extractor.getFromDate() != null && extractor.getToDate() != null);
+
+        //check if from date is less than to date
+        assertTrue(extractor.getFromDate().before(extractor.getToDate()));
+
+        //sort list and check whether from and to match first and last items. NB: sorting used only in test because of performance penalty or sorting large data
+        Collections.sort(l, (x, y) -> x.getTransactionTimestamp().compareTo(y.getTransactionTimestamp()));
+        assertTrue(extractor.getToDate() == l.get(l.size() - 1).getTransactionTimestamp());
+        assertTrue(extractor.getFromDate() == l.get(0).getTransactionTimestamp());
+    }
 
 }

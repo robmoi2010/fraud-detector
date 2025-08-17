@@ -1,8 +1,8 @@
 package com.goglotek.frauddetector.dataextractionservice.service;
 
 import com.goglotek.frauddetector.dataextractionservice.exception.GoglotekException;
-import com.goglotek.frauddetector.dataextractionservice.model.FileDto;
-import com.goglotek.frauddetector.dataextractionservice.model.Transaction;
+import com.goglotek.frauddetector.dataextractionservice.dto.FileDto;
+import com.goglotek.frauddetector.dataextractionservice.dto.Transaction;
 
 import java.util.List;
 

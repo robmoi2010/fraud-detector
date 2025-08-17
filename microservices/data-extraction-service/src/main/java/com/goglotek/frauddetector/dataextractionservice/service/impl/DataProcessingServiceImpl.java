@@ -5,10 +5,9 @@ import com.goglotek.frauddetector.dataextractionservice.configuration.Config;
 import com.goglotek.frauddetector.dataextractionservice.client.FileClient;
 import com.goglotek.frauddetector.dataextractionservice.cryptography.Cryptography;
 import com.goglotek.frauddetector.dataextractionservice.exception.GoglotekException;
-import com.goglotek.frauddetector.dataextractionservice.extractors.CsvExtractor;
 import com.goglotek.frauddetector.dataextractionservice.extractors.DataExtractor;
-import com.goglotek.frauddetector.dataextractionservice.model.FileDto;
-import com.goglotek.frauddetector.dataextractionservice.model.Transaction;
+import com.goglotek.frauddetector.dataextractionservice.dto.FileDto;
+import com.goglotek.frauddetector.dataextractionservice.dto.TransactionsDto;
 import com.goglotek.frauddetector.dataextractionservice.schema.Schema;
 import com.goglotek.frauddetector.dataextractionservice.service.DataProcessingService;
 import org.apache.logging.log4j.LogManager;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.nio.file.Files;
-import java.util.List;
 
 @Service
 public class DataProcessingServiceImpl implements DataProcessingService {
@@ -59,13 +57,17 @@ public class DataProcessingServiceImpl implements DataProcessingService {
     }
 
     @Override
-    public List<Transaction> extractFilesData(FileDto file) throws GoglotekException, IOException {
+    public TransactionsDto extractFilesData(FileDto file) throws GoglotekException, IOException {
+        TransactionsDto transactionsDto = new TransactionsDto();
         byte[] encryptedFile = fileClient.getFile(file.getAbsolutePath());
         if (encryptedFile == null) {
             throw new GoglotekException("File Not found");
         }
         byte[] decryptedFile = cryptography.decrypt(encryptedFile, config.getEncryptionKey(), config.getEncryptionInitVector());
-        return dataExtractor.extractTransactions(decryptedFile, this.schema);
+        transactionsDto.setTransactions(dataExtractor.extractTransactions(decryptedFile, this.schema));
+        transactionsDto.setFromDate(dataExtractor.getFromDate());
+        transactionsDto.setToDate(dataExtractor.getToDate());
+        return transactionsDto;
     }
 
 }

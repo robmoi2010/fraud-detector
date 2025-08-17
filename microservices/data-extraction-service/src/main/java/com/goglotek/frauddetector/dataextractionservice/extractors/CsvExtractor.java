@@ -1,9 +1,8 @@
 package com.goglotek.frauddetector.dataextractionservice.extractors;
 
-import com.goglotek.frauddetector.dataextractionservice.client.FileClient;
 import com.goglotek.frauddetector.dataextractionservice.exception.GoglotekException;
 import com.goglotek.frauddetector.dataextractionservice.exception.UnimplementedFeatureException;
-import com.goglotek.frauddetector.dataextractionservice.model.Transaction;
+import com.goglotek.frauddetector.dataextractionservice.dto.Transaction;
 import com.goglotek.frauddetector.dataextractionservice.schema.Column;
 import com.goglotek.frauddetector.dataextractionservice.schema.Schema;
 import org.apache.commons.csv.CSVFormat;
@@ -24,22 +23,49 @@ import java.util.List;
 import java.util.Map;
 import java.util.Date;
 
+//class not thread safe. Make it thread safe if you plan to extract data from multiple files concurrently or use multiple file queues
 @Primary
 @Component
 public class CsvExtractor implements DataExtractor {
     static final Logger logger = LogManager.getLogger(CsvExtractor.class);
-    private final String[] DATE_FORMATS = {
-            "dd/MM/yyyy mm:ss",
-            "dd-MM-yyyy mm:ss",
-            "MM/dd/yyyy mm:ss",
-            "MM-dd-yyyy mm:ss",
-            "dd MM yyyy mm:ss",
-            "MM dd yyyy mm:ss"
+    //TODO: for paying clients, order the array or add a field specifying a format weight or importance so that the most likely or important format get tried first
+    private final String[] TIMESTAMP_FORMATS = {
+            // Date + Time
+            "yyyy-MM-dd HH:mm:ss",
+            "yyyy-MM-dd HH:mm:ss.SSS",
+            "dd/MM/yyyy HH:mm:ss",
+            "MM/dd/yyyy hh:mm:ss a",
+
+            // ISO 8601 variants
+            "yyyy-MM-dd'T'HH:mm:ss'Z'",
+            "yyyy-MM-dd'T'HH:mm:ssXXX",
+            "yyyy-MM-dd'T'HH:mm:ss.SSSXXX",
+            "yyyy-MM-dd'T'HH:mm:ss.SSSZ",
+
+            // Compact (for filenames/logs)
+            "yyyyMMdd",
+            "yyyyMMdd_HHmmss",
+            "yyyyMMddHHmmssSSS",
+
+            // Week & Day formats
+            "EEE, dd MMM yyyy HH:mm:ss zzz", // RFC 1123
+
+            // Time zone aware
+            "yyyy-MM-dd HH:mm:ss Z",
+            "yyyy-MM-dd HH:mm:ss.SSS Z",
+            "yyyy-MM-dd HH:mm:ss VV"
     };
+    private Date fromDate;
+    private Date toDate;
 
     @Override
     public List<Transaction> extractTransactions(byte[] fileData, Schema schema) throws IOException, GoglotekException {
         List<Transaction> transactions = new ArrayList<>();
+
+        //reset toDate and fromDate so that the object can be reused without issues
+        this.fromDate = null;
+        this.toDate = null;
+
         try (ByteArrayInputStream inputStream = new ByteArrayInputStream(fileData)) {
             try (InputStreamReader reader = new InputStreamReader(inputStream)) {
                 if (schema.hasHeaders()) {
@@ -95,6 +121,20 @@ public class CsvExtractor implements DataExtractor {
                         d = processDateString(dateString);
                     }
                     transaction.setTransactionTimestamp(d);
+
+                    //set from and to date based on transaction timestamp
+                    if (fromDate == null) {
+                        fromDate = d;
+                    }
+                    if (toDate == null) {
+                        toDate = d;
+                    }
+                    if (d.after(toDate)) {
+                        toDate = d;
+                    }
+                    if (d.before(fromDate)) {
+                        fromDate = d;
+                    }
                     processedIndexes.put(index, index);
                     continue;
                 }
@@ -149,7 +189,7 @@ public class CsvExtractor implements DataExtractor {
     }
 
     private Date processDateString(String date) throws GoglotekException {
-        for (String format : DATE_FORMATS) {
+        for (String format : TIMESTAMP_FORMATS) {
             try {
                 SimpleDateFormat formatter = new SimpleDateFormat(format);
                 return formatter.parse(date);
@@ -159,5 +199,15 @@ public class CsvExtractor implements DataExtractor {
         }
         //throw exception if date object cant be created from string
         throw new GoglotekException("Date format error: can't parse the date " + date);
+    }
+
+    @Override
+    public Date getFromDate() {
+        return fromDate;
+    }
+
+    @Override
+    public Date getToDate() {
+        return toDate;
     }
 }

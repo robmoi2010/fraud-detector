@@ -1,4 +1,4 @@
-package com.goglotek.fraud_detector.dataprocessorservice.configuration;
+package com.goglotek.frauddetector.dataprocessorservice.configuration;
 
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;

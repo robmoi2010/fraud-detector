@@ -1,4 +1,4 @@
-package com.goglotek.fraud_detector.dataprocessorservice;
+package com.goglotek.frauddetector.dataprocessorservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

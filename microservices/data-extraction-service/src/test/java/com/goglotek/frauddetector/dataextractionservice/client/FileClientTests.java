@@ -3,8 +3,7 @@ package com.goglotek.frauddetector.dataextractionservice.client;
 import com.goglotek.frauddetector.dataextractionservice.AbstractTests;
 import com.goglotek.frauddetector.dataextractionservice.configuration.Config;
 import com.goglotek.frauddetector.dataextractionservice.exception.GoglotekException;
-import com.goglotek.frauddetector.dataextractionservice.model.FileType;
-import org.junit.jupiter.api.AfterAll;
+import com.goglotek.frauddetector.dataextractionservice.dto.FileType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.io.IOException;
 import java.nio.file.*;
-import java.nio.file.attribute.BasicFileAttributes;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;

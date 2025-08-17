@@ -2,7 +2,7 @@ package com.goglotek.frauddetector.dataextractionservice.client;
 
 import com.goglotek.frauddetector.dataextractionservice.configuration.Config;
 import com.goglotek.frauddetector.dataextractionservice.exception.GoglotekException;
-import com.goglotek.frauddetector.dataextractionservice.model.FileType;
+import com.goglotek.frauddetector.dataextractionservice.dto.FileType;
 
 public interface Client {
     public byte[] getFile(final String filePath) throws GoglotekException;

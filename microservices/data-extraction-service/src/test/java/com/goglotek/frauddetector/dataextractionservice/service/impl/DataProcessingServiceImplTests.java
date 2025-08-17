@@ -4,8 +4,8 @@ import com.goglotek.frauddetector.dataextractionservice.AbstractTests;
 import com.goglotek.frauddetector.dataextractionservice.configuration.Config;
 import com.goglotek.frauddetector.dataextractionservice.cryptography.Cryptography;
 import com.goglotek.frauddetector.dataextractionservice.exception.GoglotekException;
-import com.goglotek.frauddetector.dataextractionservice.model.FileDto;
-import com.goglotek.frauddetector.dataextractionservice.model.Transaction;
+import com.goglotek.frauddetector.dataextractionservice.dto.FileDto;
+import com.goglotek.frauddetector.dataextractionservice.dto.TransactionsDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,6 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -63,9 +62,9 @@ public class DataProcessingServiceImplTests extends AbstractTests {
 
     @Test
     public void shouldExtractFileData() throws GoglotekException, IOException {
-        List<Transaction> l = dataProcessingService.extractFilesData(fileDto);
-        assertTrue(l != null);
-        assertTrue(l.size() == transactionsCount);
+        TransactionsDto l = dataProcessingService.extractFilesData(fileDto);
+        assertTrue(l.getTransactions() != null);
+        assertTrue(l.getTransactions().size() == transactionsCount);
         //Most's tests handled in dataExtractor
     }
 

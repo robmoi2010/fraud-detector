@@ -2,15 +2,14 @@ package com.goglotek.frauddetector.dataextractionservice.service.impl;
 
 import com.goglotek.frauddetector.dataextractionservice.AbstractTests;
 import com.goglotek.frauddetector.dataextractionservice.exception.GoglotekException;
-import com.goglotek.frauddetector.dataextractionservice.model.FileDto;
-import com.goglotek.frauddetector.dataextractionservice.model.Transaction;
+import com.goglotek.frauddetector.dataextractionservice.dto.FileDto;
+import com.goglotek.frauddetector.dataextractionservice.dto.Transaction;
 import com.goglotek.frauddetector.dataextractionservice.rest.RestClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
 import java.util.Date;

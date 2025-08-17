@@ -1,4 +1,4 @@
-package com.goglotek.frauddetector.dataextractionservice.model;
+package com.goglotek.frauddetector.dataextractionservice.dto;
 
 import java.util.Date;
 
