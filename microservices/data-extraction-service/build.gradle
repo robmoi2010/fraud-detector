@@ -1,15 +1,30 @@
 plugins {
-	id 'org.springframework.boot' version '2.5.2'
-	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id 'org.springframework.boot' version '3.5.4'
+	id 'io.spring.dependency-management' version '1.1.6'
 }
 
 group = 'com.goglotek'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '8'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17) // Spring Boot 3.x requires Java 17+
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
 
 repositories {
 	mavenCentral()
+}
+
+ext {
+	set('springCloudVersion', "2025.0.0")
 }
 
 dependencies {
@@ -22,6 +37,12 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
-test {
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
+
+tasks.named('test') {
 	useJUnitPlatform()
 }

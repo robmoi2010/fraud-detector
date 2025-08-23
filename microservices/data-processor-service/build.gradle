@@ -1,27 +1,46 @@
 plugins {
-	id 'org.springframework.boot' version '2.5.2'
-	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id 'org.springframework.boot' version '3.5.4'
+	id 'io.spring.dependency-management' version '1.1.6'
 }
 
 group = 'com.goglotek'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '8'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17) // Spring Boot 3.x requires Java 17+
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
 
 repositories {
 	mavenCentral()
 }
 
+ext {
+	set('springCloudVersion', "2025.0.0")
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-amqp'
 	implementation 'org.springframework.boot:spring-boot-starter-json'
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client:3.0.3'
-	implementation group: 'org.postgresql', name: 'postgresql', version: '42.2.18'
+	implementation 'com.squareup.okhttp3:okhttp:4.12.0'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
 
-test {
+tasks.named('test') {
 	useJUnitPlatform()
 }

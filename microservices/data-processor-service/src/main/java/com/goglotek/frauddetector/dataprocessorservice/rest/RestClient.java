@@ -1,6 +1,7 @@
 package com.goglotek.frauddetector.dataprocessorservice.rest;
 
-import com.goglotek.frauddetector.dataextractionservice.configuration.Config;
+import com.goglotek.frauddetector.dataprocessorservice.configuration.Config;
+import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -15,18 +15,18 @@ import org.springframework.messaging.handler.annotation.support.DefaultMessageHa
 @Configuration
 public class RabbitMQConfiguration implements RabbitListenerConfigurer {
 	@Bean
-	public TopicExchange exchange(@Value("${goglotek.mpesareconciliation.exchange}") final String exchangeName) {
+	public TopicExchange exchange(@Value("${goglotek.frauddetector.exchange}") final String exchangeName) {
 		return new TopicExchange(exchangeName);
 	}
 
 	@Bean
-	public Queue reconciliationQueue(@Value("${goglotek.recon.queue}") final String queueName) {
+	public Queue reconciliationQueue(@Value("${goglotek.frauddetector.queue}") final String queueName) {
 		return new Queue(queueName, true);
 	}
 
 	@Bean
 	Binding binding(final Queue queue, final TopicExchange exchange,
-			@Value("${goglotek.recon.routing_key}") final String routingKey) {
+			@Value("${goglotek.processing.routing_key}") final String routingKey) {
 		return BindingBuilder.bind(queue).to(exchange).with(routingKey);
 	}
 

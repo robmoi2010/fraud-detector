@@ -25,10 +25,13 @@ public class DataStoreServiceImpl implements DataStoreService {
     @Autowired
     private Cryptography cryptography;
 
+    @Autowired
+    ObjectMapper mapper;
+
     @Override
     public String storeFile(FileDto file) throws GoglotekException {
         try {
-            String unencryptedTxt = new ObjectMapper().writeValueAsString(file);
+            String unencryptedTxt = mapper.writeValueAsString(file);
             //encrypt the data
             byte[] encrypted = cryptography.encrypt(unencryptedTxt.getBytes(), config.getEncryptionKey(), config.getEncryptionInitVector());
             return restClient.post(config.getBaseUrl() + "" + config.getPushFilesEndpoint(), new String(encrypted));
@@ -43,7 +46,7 @@ public class DataStoreServiceImpl implements DataStoreService {
     @Override
     public String storeTransactions(List<Transaction> transactions) throws GoglotekException {
         try {
-            String unencryptedTxt = new ObjectMapper().writeValueAsString(transactions);
+            String unencryptedTxt = mapper.writeValueAsString(transactions);
             //encrypt the data
             byte[] encrypted = cryptography.encrypt(unencryptedTxt.getBytes(), config.getEncryptionKey(), config.getEncryptionInitVector());
             return restClient.post(config.getBaseUrl() + "" + config.getPushTransactionsEndpoint(), new String(encrypted));

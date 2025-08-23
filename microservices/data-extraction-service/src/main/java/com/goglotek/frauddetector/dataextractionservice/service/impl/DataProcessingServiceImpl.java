@@ -35,6 +35,9 @@ public class DataProcessingServiceImpl implements DataProcessingService {
     @Autowired
     private DataExtractor dataExtractor;
 
+    @Autowired
+    ObjectMapper mapper;
+
     ResourceLoader resourceLoader;
 
     private Schema schema;
@@ -49,7 +52,7 @@ public class DataProcessingServiceImpl implements DataProcessingService {
     private Schema getSchema() {
         try {
             Resource r = resourceLoader.getResource("classpath:/Schema.json");
-            return new ObjectMapper().readValue(Files.readAllBytes(resourceLoader.getResource("classpath:/Schema.json").getFile().toPath()), Schema.class);
+            return mapper.readValue(Files.readAllBytes(resourceLoader.getResource("classpath:/Schema.json").getFile().toPath()), Schema.class);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return null;

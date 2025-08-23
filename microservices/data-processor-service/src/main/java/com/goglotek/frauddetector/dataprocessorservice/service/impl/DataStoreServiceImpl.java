@@ -6,11 +6,12 @@ import com.goglotek.frauddetector.dataprocessorservice.dto.Transaction;
 import com.goglotek.frauddetector.dataprocessorservice.rest.RestClient;
 import com.goglotek.frauddetector.dataprocessorservice.service.DataStoreService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+@Service
 public class DataStoreServiceImpl implements DataStoreService {
     @Autowired
     RestClient restClient;
