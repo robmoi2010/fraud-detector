@@ -87,7 +87,7 @@ public class ProviderTransactionsController {
         List<ProviderTransactions> transactions = new ArrayList<>();
         Files file = filesService.getFileByGlobalId(fileGlobalId);
         for (String transaction : encryptedTransactions) {
-            byte[] decrypted = cryptography.decrypt(transaction.getBytes(), config.getEncryptionKey());
+            byte[] decrypted = cryptography.decrypt(transaction.getBytes(), config.getEncryptionKey(), config.getEncryptionInitVector());
             try {
                 CreateProviderTransactionsDto dto = new ObjectMapper().readValue(decrypted, CreateProviderTransactionsDto.class);
                 ProviderTransactions p = new ProviderTransactions();

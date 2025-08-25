@@ -13,7 +13,7 @@ import com.goglotek.frauddetector.datastoreservice.AbstractTest;
 public class GenericControllerTests extends AbstractTest {
     @BeforeEach
     public void setUp() throws Exception {
-        super.startUp();
+
     }
 
     @Test

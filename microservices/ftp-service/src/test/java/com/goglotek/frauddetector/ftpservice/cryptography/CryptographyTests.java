@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class CryptographyTests {
     @Autowired
     private Cryptography cypher;
+
     private String encryptTxt = "Encryption Test";
     private String key = "key12345678";
     private String initVector = "vector1234567890";
@@ -30,7 +31,7 @@ public class CryptographyTests {
         //encrypt
         byte[] encrypted = cypher.encrypt(encryptTxt.getBytes(), key, initVector);
         assertTrue(encrypted.length > 0);
-        assertTrue(new String(encrypted) != encryptTxt);
+        assertTrue(!new String(encrypted).equals(encryptTxt));
 
         //decrypt
         String decryptedTxt = new String(cypher.decrypt(encrypted, key, initVector));
@@ -61,7 +62,7 @@ public class CryptographyTests {
         //encrypt
         byte[] encrypted = cypher.encrypt(encryptTxt.getBytes(), key, initVector);
         assertTrue(encrypted.length > 0);
-        assertTrue(new String(encrypted) != encryptTxt);
+        assertTrue(!new String(encrypted).equals(encryptTxt));
 
         //decrypt with wrong key
         try {

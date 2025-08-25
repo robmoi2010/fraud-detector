@@ -1,77 +1,87 @@
 package com.goglotek.frauddetector.datastoreservice;
 
-import java.util.*;
-
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goglotek.frauddetector.datastoreservice.configuration.Config;
+import com.jayway.jsonpath.JsonPath;
+import org.apache.catalina.core.ApplicationContext;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
+
+import java.io.UnsupportedEncodingException;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
 @AutoConfigureMockMvc
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AbstractTest {
     @Autowired
     protected MockMvc mvc;
-    protected String token;
 
-    @LocalServerPort
-    protected String serverPort;
+    protected String token;
+    protected String tokenWithoutRoles;
 
     @Autowired
     protected Config config;
 
-    @Autowired
-    protected ObjectMapper objectMapper;
+    protected static String clientId = "test";
+    protected static String clientSecret = "test12345";
+    protected static String userId = "user1@gmail.com";
+    protected static String redirectUrl = "http://localhost:8080/authentication/redirect/code";
 
-    protected String tokenUrl = "";
-    protected String baseUrl = "";
-
-    @BeforeEach
+    @BeforeAll
     protected void startUp() throws Exception {
-        tokenUrl = "http://localhost:" + serverPort + "/oauth2/token";
-        baseUrl = "http://localhost:" + serverPort + "";
-        shouldLogInAndReturnToken();
+        shouldLogInAndUpdateToken();
     }
 
-    private void shouldLogInAndReturnToken() throws Exception {
-        //create request headers and content
-        Map<String, List<String>> headers = new HashMap<>();
-        headers.put("Authorization", Arrays.asList("Basic dGVzdDp0ZXN0MTIzNDU="));
-        headers.put("Content-Type", Arrays.asList("application/x-www-form-urlencoded"));
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.putAll(headers);
+    private void shouldLogInAndUpdateToken() throws Exception {
+        token = getToken("USER");
+        tokenWithoutRoles = getToken("");
+    }
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("grant_type").append("=").append("client_credentials");
+    private String getToken(String... roles) throws Exception {
+        MvcResult authResult = mvc.perform(get("/oauth2/authorize?response_type=code&client_id=" + clientId + "&redirect_uri=" + redirectUrl)
+                        .with(httpBasic(clientId, clientSecret))
+                        .with(user(userId).roles(roles)))
+                .andExpect(status().is3xxRedirection())
+                .andReturn();
+        String redirect = authResult.getResponse().getRedirectedUrl();
 
-        //send request
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(tokenUrl).headers(httpHeaders).content(sb.toString())).andReturn();
-        assertTrue(mvcResult != null);
-        String results = mvcResult.getResponse().getContentAsString();
+        assertTrue(redirect != null && !redirect.isEmpty());
 
-        //confirm that results is not null or empty
-        assertTrue(results != null && !results.isEmpty());
+        String code = redirect.split("code=")[1];
 
-        //get access token from results
-        JsonNode node = objectMapper.readTree(results);
-        token = node.get("access_token").asText();
-        assertTrue(token != null && !token.isEmpty());
+        assertTrue(code != null && !code.isEmpty());
+
+        // Exchange code for token
+        MvcResult tokenResult = mvc.perform(post("/oauth2/token")
+                        .param("grant_type", "authorization_code")
+                        .param("code", code)
+                        .param("redirect_uri", redirectUrl)
+                        .with(httpBasic(clientId, clientSecret)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.access_token").exists())
+                .andReturn();
+
+        String accessToken = JsonPath.read(
+                tokenResult.getResponse().getContentAsString(),
+                "$.access_token"
+        );
+
+        assertTrue(!accessToken.isEmpty());
+        return accessToken;
     }
 
 }

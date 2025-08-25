@@ -6,72 +6,79 @@ import com.goglotek.frauddetector.datastoreservice.cryptography.Cryptography;
 import com.goglotek.frauddetector.datastoreservice.dto.CreateFileDto;
 import com.goglotek.frauddetector.datastoreservice.model.Files;
 import com.goglotek.frauddetector.datastoreservice.service.FilesService;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class FilesControllerTests extends AbstractTest {
-    @Autowired
-    Config config;
+
+    @MockitoSpyBean
+    private Config config;
 
     @MockitoBean
     private FilesService filesService;
 
-    @MockitoBean
+    @Autowired
     private Cryptography cryptography;
 
+    private String fileName = "file123.csv";
+    private String encryptionKey = "key1234567890987";
+    private String initVector = "vector1234567890";
+    private String fileId = UUID.randomUUID().toString();
+
     private String filePayload = "{" +
-            "     \"fileName\":\"file123.csv\"," +
+            "     \"fileName\":\"" + fileName + "\"," +
             "     \"absolutePath\":\"\"," +
             "     \"createdOn\":\"\"," +
-            "     \"fileId\":\"12345\"," +
+            "     \"fileId\":\"" + fileId + "\"," +
             "     \"totalTransactions\":20," +
             "     \"groupAccount\":\"\"," +
             "     \"fromDate\":\"\"," +
             "     \"toDate\":\"\"" +
             "}";
 
-    @BeforeEach
+    @BeforeAll
     public void setUp() throws Exception {
-        //super.startUp();
-        when(filesService.createFile(any(CreateFileDto.class))).thenReturn(new Files());
-        when(cryptography.encrypt(any(byte[].class), anyString())).thenReturn(filePayload.getBytes());
-        when(cryptography.decrypt(any(byte[].class), anyString())).thenReturn(filePayload.getBytes());
+        Files respFile = new Files();
+        respFile.setFileName(fileName);
+        when(filesService.createFile(any(CreateFileDto.class))).thenReturn(respFile);
+        when(config.getEncryptionInitVector()).thenReturn(initVector);
+        when(config.getEncryptionKey()).thenReturn(encryptionKey);
     }
 
     @Test
     public void shouldCreateFileSuccessfully() throws Exception {
         String uri = "/files/create";
-        byte[] encrypted = cryptography.encrypt(filePayload.getBytes(), config.getEncryptionKey());
 
-        //
-        Map<String, List<String>> headers = new HashMap<>();
-        headers.put("Authorization", Arrays.asList("Bearer " + token));
-        headers.put("Content-Type", Arrays.asList("application/json"));
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.putAll(headers);
+        String encrypted = Base64.getEncoder().encodeToString(cryptography.encrypt(filePayload.getBytes(), config.getEncryptionKey(), config.getEncryptionInitVector()));
 
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post(baseUrl + uri).headers(httpHeaders).content(new String(encrypted)).accept(MediaType.APPLICATION_JSON_VALUE))
-                .andReturn();
-        String results = mvcResult.getResponse().getContentAsString();
-        int status = mvcResult.getResponse().getStatus();
-        assertEquals(200, status);
-        assertTrue(results != null);
+        mvc.perform(post(uri).header("Authorization", "Bearer " + token)
+                        .content(encrypted).accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(fileName)));
+    }
+
+    @Test
+    public void shouldFailDueToUserLackingPermissions() throws Exception {
+        String uri = "/files/create";
+
+        String encrypted = Base64.getEncoder().encodeToString(cryptography.encrypt(filePayload.getBytes(), config.getEncryptionKey(), config.getEncryptionInitVector()));
+
+        mvc.perform(post(uri).header("Authorization", "Bearer " + tokenWithoutRoles)
+                        .content(encrypted).accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().is(HttpStatus.FORBIDDEN.value()));//forbidden meaning user lacks permissions
     }
 }

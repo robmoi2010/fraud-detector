@@ -27,7 +27,7 @@ public class CryptographyTests extends AbstractTests {
         //encrypt
         byte[] encrypted = cryptography.encrypt(encryptTxt.getBytes(), key, initVector);
         assertTrue(encrypted.length > 0);
-        assertTrue(new String(encrypted) != encryptTxt);
+        assertTrue(!new String(encrypted).equals(encryptTxt));
 
         //decrypt
         String decryptedTxt = new String(cryptography.decrypt(encrypted, key, initVector));
@@ -58,7 +58,7 @@ public class CryptographyTests extends AbstractTests {
         //encrypt
         byte[] encrypted = cryptography.encrypt(encryptTxt.getBytes(), key, initVector);
         assertTrue(encrypted.length > 0);
-        assertTrue(new String(encrypted) != encryptTxt);
+        assertTrue(!new String(encrypted).equals(encryptTxt));
 
         //decrypt with wrong key
         try {

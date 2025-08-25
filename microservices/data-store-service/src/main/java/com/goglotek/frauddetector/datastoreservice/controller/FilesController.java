@@ -1,6 +1,7 @@
 package com.goglotek.frauddetector.datastoreservice.controller;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -83,13 +84,11 @@ public class FilesController {
 
     @RequestMapping(value = "/create", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody Files createFile(@RequestBody String encryptedFileData) throws GoglotekException {
-        SecurityContext context = SecurityContextHolder.getContext();
-        Authentication a = context.getAuthentication();
         byte[] decrypted;
         try {
-            decrypted = cryptography.decrypt(encryptedFileData.getBytes(), config.getEncryptionKey());
+            decrypted = cryptography.decrypt(Base64.getDecoder().decode(encryptedFileData.getBytes()), config.getEncryptionKey(), config.getEncryptionInitVector());
         } catch (GoglotekException e) {
-            throw new InvalidEncryptionKeyException(e, "Invalid encryption key:" + e.getMessage());
+            throw new InvalidEncryptionKeyException(e, "Invalid encryption key. Send file encrypted with a key recognized by the server.");
         }
         CreateFileDto file;
         try {
@@ -98,10 +97,5 @@ public class FilesController {
             throw new GoglotekException(e, "json deserialization error:" + e.getMessage());
         }
         return filesService.createFile(file);
-    }
-
-    @RequestMapping(value = "/test", method = RequestMethod.GET, produces = "application/json")
-    public @ResponseBody String testUrl() {
-        return "success";
     }
 }

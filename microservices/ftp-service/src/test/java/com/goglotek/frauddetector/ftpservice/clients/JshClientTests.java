@@ -9,8 +9,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import java.io.*;
 import java.nio.file.*;
@@ -23,23 +23,24 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class JshClientTests {
-    @MockBean
+    @MockitoBean
     private Config config;
 
-    @SpyBean
+    @MockitoSpyBean
     private JshClient jshClient;
 
-    @MockBean
+    @MockitoBean
     private JSch jsch;
 
-    @MockBean
+    @MockitoBean
     private Cryptography cryptography;
 
-    @MockBean
+    @MockitoBean
     private Session session;
 
-    @MockBean
+    @MockitoBean
     private ChannelSftp channelSftp;
+
     private static String rootTestFolder = "localRoot";
 
     @BeforeEach
