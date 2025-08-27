@@ -9,7 +9,8 @@ public interface Client {
 
     public void saveFile(final byte[] file, final String filename, final FileType type) throws GoglotekException;
 
-    public void deleteFile(final String filename, final FileType type) throws GoglotekException;
+
+    void deleteFile(String absolutePath) throws GoglotekException;
 
     public void setConfig(Config config);
 

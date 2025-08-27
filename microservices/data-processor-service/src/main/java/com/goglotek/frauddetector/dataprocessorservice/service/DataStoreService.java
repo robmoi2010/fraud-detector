@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface DataStoreService {
 
-    List<Transaction> getProviderTransactions(FileDto file);
+    List<Transaction> getProviderTransactions(FileDto file) throws Exception;
 
-    List<Transaction> getLocalTransactions(FileDto file);
+    List<Transaction> getLocalTransactions(FileDto file) throws Exception;
 
     void storeProcessedTransactionData(ProcessedTransactionDto processed);
 }

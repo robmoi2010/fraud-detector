@@ -37,8 +37,6 @@ public class DataStoreServiceImplTests extends AbstractTests {
         //mock post request
         when(restClient.post(anyString(), anyString())).thenReturn(postSuccessMessage);
 
-        //put mocked restclient in service object
-
         //create file dto
         fileDto = new FileDto();
         fileDto.setFileId(UUID.randomUUID().toString());
@@ -65,8 +63,9 @@ public class DataStoreServiceImplTests extends AbstractTests {
         assertTrue(s.equals(postSuccessMessage));
     }
 
+    @Test
     public void shouldStoreTransactions() throws GoglotekException {
-        String s = dataStoreService.storeTransactions(transactionList);
+        String s = dataStoreService.storeTransactions(transactionList, fileDto.getFileId());
         assertTrue(s.equals(postSuccessMessage));
     }
 

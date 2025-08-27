@@ -52,16 +52,19 @@ public class FilesControllerTests extends AbstractTest {
 
     @BeforeAll
     public void setUp() throws Exception {
-        Files respFile = new Files();
-        respFile.setFileName(fileName);
-        when(filesService.createFile(any(CreateFileDto.class))).thenReturn(respFile);
-        when(config.getEncryptionInitVector()).thenReturn(initVector);
-        when(config.getEncryptionKey()).thenReturn(encryptionKey);
+
     }
 
     @Test
     public void shouldCreateFileSuccessfully() throws Exception {
         String uri = "/files/create";
+
+        //create and stub mock objects
+        Files respFile = new Files();
+        respFile.setFileName(fileName);
+        when(filesService.createFile(any(CreateFileDto.class))).thenReturn(respFile);
+        when(config.getEncryptionInitVector()).thenReturn(initVector);
+        when(config.getEncryptionKey()).thenReturn(encryptionKey);
 
         String encrypted = Base64.getEncoder().encodeToString(cryptography.encrypt(filePayload.getBytes(), config.getEncryptionKey(), config.getEncryptionInitVector()));
 
@@ -72,13 +75,13 @@ public class FilesControllerTests extends AbstractTest {
     }
 
     @Test
-    public void shouldFailDueToUserLackingPermissions() throws Exception {
+    public void shouldFailDueToLackOfPermissions() throws Exception {
         String uri = "/files/create";
 
         String encrypted = Base64.getEncoder().encodeToString(cryptography.encrypt(filePayload.getBytes(), config.getEncryptionKey(), config.getEncryptionInitVector()));
 
         mvc.perform(post(uri).header("Authorization", "Bearer " + tokenWithoutRoles)
                         .content(encrypted).accept(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().is(HttpStatus.FORBIDDEN.value()));//forbidden meaning user lacks permissions
+                .andExpect(status().isForbidden());//forbidden meaning user lacks permissions
     }
 }

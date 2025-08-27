@@ -6,6 +6,7 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer;
 import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistrar;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,36 +15,38 @@ import org.springframework.messaging.handler.annotation.support.DefaultMessageHa
 
 @Configuration
 public class RabbitMQConfiguration implements RabbitListenerConfigurer {
-	@Bean
-	public TopicExchange exchange(@Value("${goglotek.frauddetector.exchange}") final String exchangeName) {
-		return new TopicExchange(exchangeName);
-	}
+    @Autowired
+    private Config config;
 
-	@Bean
-	public Queue reconciliationQueue(@Value("${goglotek.frauddetector.queue}") final String queueName) {
-		return new Queue(queueName, true);
-	}
+    @Bean
+    public TopicExchange exchange() {
+        return new TopicExchange(config.getProcessingExchange());
+    }
 
-	@Bean
-	Binding binding(final Queue queue, final TopicExchange exchange,
-			@Value("${goglotek.processing.routing_key}") final String routingKey) {
-		return BindingBuilder.bind(queue).to(exchange).with(routingKey);
-	}
+    @Bean
+    public Queue processQueue() {
+        return new Queue(config.getQueue(), true);
+    }
 
-	@Bean
-	public DefaultMessageHandlerMethodFactory messageHandlerMethodFactory() {
-		DefaultMessageHandlerMethodFactory factory = new DefaultMessageHandlerMethodFactory();
-		factory.setMessageConverter(consumerJackson2MessageConverter());
-		return factory;
-	}
+    @Bean
+    Binding binding(final Queue queue, final TopicExchange exchange) {
+        return BindingBuilder.bind(queue).to(exchange).with(config.getRoutingKey());
+    }
 
-	@Override
-	public void configureRabbitListeners(final RabbitListenerEndpointRegistrar registrar) {
-		registrar.setMessageHandlerMethodFactory(messageHandlerMethodFactory());
-	}
+    @Bean
+    public DefaultMessageHandlerMethodFactory messageHandlerMethodFactory() {
+        DefaultMessageHandlerMethodFactory factory = new DefaultMessageHandlerMethodFactory();
+        factory.setMessageConverter(consumerJackson2MessageConverter());
+        return factory;
+    }
 
-	@Bean
-	public MappingJackson2MessageConverter consumerJackson2MessageConverter() {
-		return new MappingJackson2MessageConverter();
-	}
+    @Override
+    public void configureRabbitListeners(final RabbitListenerEndpointRegistrar registrar) {
+        registrar.setMessageHandlerMethodFactory(messageHandlerMethodFactory());
+    }
+
+    @Bean
+    public MappingJackson2MessageConverter consumerJackson2MessageConverter() {
+        return new MappingJackson2MessageConverter();
+    }
 }

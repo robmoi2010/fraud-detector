@@ -4,9 +4,11 @@ import java.io.Serializable;
 import java.util.Date;
 
 import jakarta.persistence.*;
+import org.springframework.validation.annotation.Validated;
 
 @Entity
 @Table(name = "provider_transactions")
+@Validated
 public class ProviderTransactions implements Serializable {
     /**
      *
@@ -17,17 +19,22 @@ public class ProviderTransactions implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "provider_transactions_sequence")
     @Column(name = "provider_transaction_id")
     private Long transactionDsId;
-    @Column(name = "transaction_id")
+
+    @Column(name = "transaction_id", nullable = false, unique = true)
     private String transactionId;
+
     @Column(name = "created_date", nullable = false)
     private Date createdDate;
+
     @Column(name = "modified_date", nullable = false)
     private Date modifiedDate;
+
     @Column(name = "client_account", nullable = false)
     private String clientAccount;
     @Column(name = "transaction_time", nullable = false)
     private Date transactionTime;
-    @Column(name = "details", nullable = false)
+    //tune length depending on the size of your transactions extra details
+    @Column(name = "details", nullable = false, length = 10000)
     private String details;
     @Column(name = "amount", nullable = false)
     private Double amount;

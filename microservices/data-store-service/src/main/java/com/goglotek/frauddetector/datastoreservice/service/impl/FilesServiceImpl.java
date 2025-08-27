@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.goglotek.frauddetector.datastoreservice.dto.CreateFileDto;
+import com.goglotek.frauddetector.datastoreservice.exception.FileNotFoundException;
 import com.goglotek.frauddetector.datastoreservice.exception.GoglotekException;
 import com.goglotek.frauddetector.datastoreservice.model.Files;
 import com.goglotek.frauddetector.datastoreservice.repository.FilesRepository;
@@ -135,12 +136,14 @@ public class FilesServiceImpl implements FilesService {
         file.setGlobalId(fileDto.getFileId());
         file.setFromDate(fileDto.getFromDate());
         file.setToDate(fileDto.getToDate());
+        file.setModifiedDate(new Date());
+        file.setRetrievedByName("DataExtractionService");
         return create(file);
     }
 
     @Override
     public Files getFileByGlobalId(String globalId) throws GoglotekException {
-        return filesRepository.findFirstByGlobalId(globalId).orElseThrow(() -> new GoglotekException("File with global id " + globalId + " not found"));
+        return filesRepository.findFirstByGlobalId(globalId).orElseThrow(() -> new FileNotFoundException("File with global id " + globalId + " not found..."));
     }
 
 }

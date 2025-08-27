@@ -1,7 +1,7 @@
 {
   "file_type": "csv",
   "has_headers": true,
-  "date_format": "dd/MM/yyyy HH:mm:ss",
+  "date_format": "yyyy-MM-dd HH:mm:ss",
   "columns": [
     {
       "name": "RECEIPT_NUMBER",

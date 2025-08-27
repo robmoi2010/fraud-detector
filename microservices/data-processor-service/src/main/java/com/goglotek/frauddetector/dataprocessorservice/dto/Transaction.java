@@ -3,6 +3,7 @@ package com.goglotek.frauddetector.dataprocessorservice.dto;
 import java.util.Date;
 
 public class Transaction {
+    private Long transactionDsId;
     private Date createdOn;
     private String id;
     private String details;
@@ -61,6 +62,14 @@ public class Transaction {
 
     public void setGroupAccount(String groupAccount) {
         this.groupAccount = groupAccount;
+    }
+
+    public Long getTransactionDsId() {
+        return transactionDsId;
+    }
+
+    public void setTransactionDsId(Long transactionDsId) {
+        this.transactionDsId = transactionDsId;
     }
 
     public void setTransactionTimestamp(Date transactionTimestamp) {

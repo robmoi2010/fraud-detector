@@ -1,5 +1,6 @@
 package com.goglotek.frauddetector.datastoreservice.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import com.goglotek.frauddetector.datastoreservice.model.LocalTransactions;
@@ -96,6 +97,11 @@ public class LocalTransactionsServiceImpl implements LocalTransactionsService {
                 .findAll(example, PageRequest.of(page, limit,
                         direction.equalsIgnoreCase("desc") ? Sort.by(order).descending() : Sort.by(order).ascending()))
                 .getContent();
+    }
+
+    @Override
+    public List<LocalTransactions> findByTimePeriod(Date from, Date to) {
+        return localTransactionsRepository.findByTimePeriod(from, to);
     }
 
 }

@@ -26,6 +26,6 @@ public class FtpServiceImpl implements FtpService {
         if (!files.isEmpty()) {
             eventDispatcher.send(files);
         }
-    }
+  }
 
 }

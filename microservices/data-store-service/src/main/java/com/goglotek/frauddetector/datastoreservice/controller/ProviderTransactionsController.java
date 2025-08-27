@@ -2,15 +2,18 @@ package com.goglotek.frauddetector.datastoreservice.controller;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goglotek.frauddetector.datastoreservice.configuration.Config;
 import com.goglotek.frauddetector.datastoreservice.cryptography.Cryptography;
 import com.goglotek.frauddetector.datastoreservice.dto.CreateProviderTransactionsDto;
 import com.goglotek.frauddetector.datastoreservice.dto.GenericSuccessResponse;
 import com.goglotek.frauddetector.datastoreservice.dto.ProviderTransactionsDto;
+import com.goglotek.frauddetector.datastoreservice.exception.FileNotFoundException;
 import com.goglotek.frauddetector.datastoreservice.exception.GoglotekException;
 import com.goglotek.frauddetector.datastoreservice.model.Files;
 import com.goglotek.frauddetector.datastoreservice.model.ProviderTransactions;
@@ -31,7 +34,7 @@ import com.goglotek.frauddetector.datastoreservice.service.ProviderTransactionsS
 
 @RequestMapping("providertransactions")
 @RestController
-@PreAuthorize("hasAuthority('ROLE_USER')")
+@PreAuthorize("hasAnyAuthority('ROLE_USER', 'MACHINE_USER')")
 public class ProviderTransactionsController {
     @Autowired
     ProviderTransactionsService providerTransactionsService;
@@ -45,6 +48,9 @@ public class ProviderTransactionsController {
     @Autowired
     Config config;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody ProviderTransactionsDto transactions(@RequestParam(name = "page", required = true) Integer page,
                                                               @RequestParam(name = "limit", required = true) Integer limit,
@@ -57,10 +63,10 @@ public class ProviderTransactionsController {
     }
 
     @RequestMapping(value = "/{transaction_id}", method = RequestMethod.GET, produces = "application/json")
-    public @ResponseBody ProviderTransactions transction(
+    public @ResponseBody ProviderTransactions transaction(
             @PathVariable(value = "transaction_id", required = true) Long transId) {
         return providerTransactionsService.findById(transId).orElseThrow(
-                () -> new ProviderTransactionsNotFoundException("Mpesa transaction with id " + transId + " not found"));
+                () -> new ProviderTransactionsNotFoundException("transaction with id " + transId + " not found"));
     }
 
     @RequestMapping(value = "/filter", method = RequestMethod.POST, produces = "application/json")
@@ -83,27 +89,26 @@ public class ProviderTransactionsController {
     }
 
     @RequestMapping(value = "/create/{file_global_id}", method = RequestMethod.POST, produces = "application/json")
-    public @ResponseBody GenericSuccessResponse createTransactions(@PathVariable(value = "file_global_id", required = true) String fileGlobalId, @RequestBody List<String> encryptedTransactions) throws GoglotekException {
-        List<ProviderTransactions> transactions = new ArrayList<>();
+    public @ResponseBody GenericSuccessResponse createTransactions(@PathVariable(value = "file_global_id", required = true) String fileGlobalId, @RequestBody String encryptedTransactions) throws GoglotekException {
         Files file = filesService.getFileByGlobalId(fileGlobalId);
-        for (String transaction : encryptedTransactions) {
-            byte[] decrypted = cryptography.decrypt(transaction.getBytes(), config.getEncryptionKey(), config.getEncryptionInitVector());
-            try {
-                CreateProviderTransactionsDto dto = new ObjectMapper().readValue(decrypted, CreateProviderTransactionsDto.class);
-                ProviderTransactions p = new ProviderTransactions();
-                p.setClientAccount(dto.getClientAccount());
-                p.setAmount(dto.getAmount());
-                p.setTransactionId(dto.getId());
-                p.setCreatedDate(new Date());
-                p.setDetails(dto.getDetails());
-                p.setTransactionTime(dto.getTransactionTimestamp());
-                p.setFileId(file.getFileId());
-                transactions.add(p);
-            } catch (IOException e) {
-                throw new GoglotekException(e, "json deserialization error:" + e.getMessage());
-            }
+
+        byte[] decrypted;
+
+        try {
+            decrypted = cryptography.decrypt(Base64.getDecoder().decode(encryptedTransactions.getBytes()), config.getEncryptionKey(), config.getEncryptionInitVector());
+        } catch (GoglotekException e) {
+            throw new GoglotekException(e, "Decryption error: Ensure data is encrypted with a private key known by the server");
         }
-        providerTransactionsService.createAll(transactions);
+
+        List<CreateProviderTransactionsDto> transactionsDtoList;
+
+        try {
+            transactionsDtoList = objectMapper.readValue(decrypted, new TypeReference<List<CreateProviderTransactionsDto>>() {
+            });
+        } catch (IOException e) {
+            throw new GoglotekException(e, "Error in json string. Ensure the payload is a valid json or of expected format.");
+        }
+        List<ProviderTransactions> transactions = providerTransactionsService.createAll(transactionsDtoList, file);
         GenericSuccessResponse response = new GenericSuccessResponse();
         response.setMessage("success, " + transactions.size() + " for file " + file.getFileName() + " stored");
         response.setStatusCode(200);
@@ -111,5 +116,10 @@ public class ProviderTransactionsController {
         response.setServerTimestamp(new Date());
         return response;
 
+    }
+
+    @RequestMapping(value = "/globalid/{file_global_id}", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody List<ProviderTransactions> getAllByFileId(@PathVariable(value = "file_global_id", required = true) String fileId) throws GoglotekException {
+        return providerTransactionsService.findByFileGlobalId(fileId);
     }
 }

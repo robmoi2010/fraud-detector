@@ -10,5 +10,5 @@ import java.util.List;
 public interface DataStoreService {
     public String storeFile(FileDto file) throws GoglotekException;
 
-    public String storeTransactions(List<Transaction> transactions) throws GoglotekException;
+    public String storeTransactions(List<Transaction> transactions, String fileId) throws GoglotekException;
 }

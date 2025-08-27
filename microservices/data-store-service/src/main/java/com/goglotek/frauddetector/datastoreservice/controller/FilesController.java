@@ -15,7 +15,6 @@ import com.goglotek.frauddetector.datastoreservice.model.Files;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +29,7 @@ import com.goglotek.frauddetector.datastoreservice.service.FilesService;
 
 @RestController
 @RequestMapping("/files")
-@PreAuthorize("hasAuthority('ROLE_USER')")
+@PreAuthorize("hasAnyAuthority('ROLE_USER', 'MACHINE_USER')")
 public class FilesController {
     @Autowired
     FilesService filesService;
@@ -58,7 +57,12 @@ public class FilesController {
     @RequestMapping(value = "/{file_id}", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody Files file(@PathVariable(value = "file_id", required = false) Long fileId) {
         return filesService.findById(fileId)
-                .orElseThrow(() -> new FileNotFoundException("Mpesa file with id " + fileId + " not found"));
+                .orElseThrow(() -> new FileNotFoundException("File with id " + fileId + " not found"));
+    }
+
+    @RequestMapping(value = "/globalid/{file_Global_id}", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody Files fileByGlobalId(@PathVariable(value = "file_Global_id", required = true) String fileId) throws GoglotekException {
+        return filesService.getFileByGlobalId(fileId);
     }
 
     @RequestMapping(value = "/filter", method = RequestMethod.GET, produces = "application/json")
@@ -84,6 +88,7 @@ public class FilesController {
 
     @RequestMapping(value = "/create", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody Files createFile(@RequestBody String encryptedFileData) throws GoglotekException {
+        Authentication a = SecurityContextHolder.getContext().getAuthentication();
         byte[] decrypted;
         try {
             decrypted = cryptography.decrypt(Base64.getDecoder().decode(encryptedFileData.getBytes()), config.getEncryptionKey(), config.getEncryptionInitVector());

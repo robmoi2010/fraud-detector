@@ -12,6 +12,7 @@ import com.goglotek.frauddetector.dataextractionservice.service.DataStoreService
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -34,7 +35,7 @@ public class DataStoreServiceImpl implements DataStoreService {
             String unencryptedTxt = mapper.writeValueAsString(file);
             //encrypt the data
             byte[] encrypted = cryptography.encrypt(unencryptedTxt.getBytes(), config.getEncryptionKey(), config.getEncryptionInitVector());
-            return restClient.post(config.getBaseUrl() + "" + config.getPushFilesEndpoint(), new String(encrypted));
+            return restClient.post(config.getBaseUrl() + "" + config.getPushFilesEndpoint(), Base64.getEncoder().encodeToString(encrypted));
         } catch (JsonProcessingException e) {
             throw new GoglotekException(e, "File parse to json failed:" + e.getMessage());
         } catch (Exception e) {
@@ -44,12 +45,12 @@ public class DataStoreServiceImpl implements DataStoreService {
 
     //TODO: for paying clients, batch transactions if they are more than a certain threshold
     @Override
-    public String storeTransactions(List<Transaction> transactions) throws GoglotekException {
+    public String storeTransactions(List<Transaction> transactions, String fileId) throws GoglotekException {
         try {
             String unencryptedTxt = mapper.writeValueAsString(transactions);
             //encrypt the data
             byte[] encrypted = cryptography.encrypt(unencryptedTxt.getBytes(), config.getEncryptionKey(), config.getEncryptionInitVector());
-            return restClient.post(config.getBaseUrl() + "" + config.getPushTransactionsEndpoint(), new String(encrypted));
+            return restClient.post(config.getBaseUrl() + "" + config.getPushTransactionsEndpoint() + "/" + fileId, Base64.getEncoder().encodeToString(encrypted));
         } catch (JsonProcessingException e) {
             throw new GoglotekException(e, "Transactions parse to json failed:" + e.getMessage());
         } catch (Exception e) {

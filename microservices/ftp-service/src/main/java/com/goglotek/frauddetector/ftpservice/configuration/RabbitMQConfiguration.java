@@ -4,15 +4,18 @@ import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMQConfiguration {
+	@Autowired
+	private Config config;
+
 	@Bean
-	public TopicExchange serviceExchange(@Value("${goglotek.fraud-detector.exchange}") final String exchangeName) {
-		return new TopicExchange(exchangeName);
+	public TopicExchange serviceExchange() {
+		return new TopicExchange(config.getServiceExchange());
 	}
 
 	@Bean

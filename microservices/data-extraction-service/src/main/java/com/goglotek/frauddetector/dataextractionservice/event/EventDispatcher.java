@@ -11,6 +11,7 @@ import com.goglotek.frauddetector.dataextractionservice.dto.FileDto;
 
 @Component
 public class EventDispatcher {
+
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
@@ -19,7 +20,7 @@ public class EventDispatcher {
 
 
     public void send(final List<FileDto> files) {
-        rabbitTemplate.convertAndSend(config.getFilesExchange(), config.getFilesRoutingKey(), files);
+        rabbitTemplate.convertAndSend(config.getProcessingExchange(), config.getProcessingRoutingKey(), files);
     }
 
 }

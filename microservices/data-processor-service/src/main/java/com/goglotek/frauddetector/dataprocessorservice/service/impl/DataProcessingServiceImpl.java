@@ -22,7 +22,7 @@ public class DataProcessingServiceImpl implements DataProcessingService {
     private Config config;
 
     @Override
-    public void processData(List<FileDto> files) {
+    public void processData(List<FileDto> files) throws Exception {
         List<Transaction> fraudulentTransactions = new ArrayList<>();
         List<Transaction> missingTransactions = new ArrayList<>();
         for (FileDto file : files) {

@@ -7,34 +7,100 @@ import org.springframework.stereotype.Component;
 public class Config {
     @Value("${goglotek.transactions.staging_folder}")
     private String stagingDir;
+
     @Value("${goglotek.transactions.error_folder}")
     private String errorDir;
+
     @Value("${goglotek.transactions.processed_folder}")
     private String processedDir;
+
     @Value("${goglotek.transactions.unauthorized_folder}")
     private String unauthorizedDir;
+
     @Value("${goglotek.cryptography.encryption_key}")
     private String encryptionKey;
+
     @Value("${goglotek.cryptography.init_vector}")
     private String encryptionInitVector;
+
     @Value("${goglotek.frauddetector.exchange}")
     private String filesExchange;
+
     @Value("${goglotek.ftp.routing_key}")
     private String filesRoutingKey;
+
     @Value("${goglotek.pushfiles.endpoint}")
     private String pushFilesEndpoint;
+
     @Value("${goglotek.pushtransactions.endpoint}")
     private String pushTransactionsEndpoint;
+
     @Value("${goglotek.base_url}")
     private String baseUrl;
-    @Value("${goglotek.OauthId}")
-    private String OauthId;
-    @Value("${goglotek.OauthSecret}")
-    private String OauthSecret;
-    @Value("${goglotek.webservice.username}")
-    private String wsUsername;
-    @Value("${goglotek.webservice.password}")
-    private String wsPassword;
+
+    @Value("${goglotek.webservice.token_endpoint}")
+    private String tokenEndpoint;
+
+    @Value("${goglotek.webservice.client_id}")
+    private String clientId;
+
+    @Value("${goglotek.webservice.client_secret}")
+    private String clientSecret;
+
+    @Value("${goglotek.webservice.scope}")
+    private String scope;
+
+    @Value("${goglotek.ftp.queue}")
+    private String filesQueue;
+
+    @Value("${goglotek.processing.exchange}")
+    private String processingExchange;
+
+    @Value("${goglotek.processing.routing_key}")
+    private String processingRoutingKey;
+
+    @Value("${goglotek.core.system_timestamp_format}")
+    private String internalTimestampFormat;
+
+    public String getInternalTimestampFormat() {
+        return internalTimestampFormat;
+    }
+
+    public void setInternalTimestampFormat(String internalTimestampFormat) {
+        this.internalTimestampFormat = internalTimestampFormat;
+    }
+
+    public String getProcessingExchange() {
+        return processingExchange;
+    }
+
+    public void setProcessingExchange(String processingExchange) {
+        this.processingExchange = processingExchange;
+    }
+
+    public String getProcessingRoutingKey() {
+        return processingRoutingKey;
+    }
+
+    public void setProcessingRoutingKey(String processingRoutingKey) {
+        this.processingRoutingKey = processingRoutingKey;
+    }
+
+    public String getFilesQueue() {
+        return filesQueue;
+    }
+
+    public void setFilesQueue(String filesQueue) {
+        this.filesQueue = filesQueue;
+    }
+
+    public String getScope() {
+        return scope;
+    }
+
+    public void setScope(String scope) {
+        this.scope = scope;
+    }
 
     public String getStagingDir() {
         return stagingDir;
@@ -124,35 +190,27 @@ public class Config {
         this.baseUrl = baseUrl;
     }
 
-    public String getOauthId() {
-        return OauthId;
+    public String getClientId() {
+        return clientId;
     }
 
-    public void setOauthId(String oauthId) {
-        OauthId = oauthId;
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 
-    public String getOauthSecret() {
-        return OauthSecret;
+    public String getClientSecret() {
+        return clientSecret;
     }
 
-    public void setOauthSecret(String oauthSecret) {
-        OauthSecret = oauthSecret;
+    public void setClientSecret(String clientSecret) {
+        this.clientSecret = clientSecret;
     }
 
-    public String getWsUsername() {
-        return wsUsername;
+    public String getTokenEndpoint() {
+        return tokenEndpoint;
     }
 
-    public void setWsUsername(String wsUsername) {
-        this.wsUsername = wsUsername;
-    }
-
-    public String getWsPassword() {
-        return wsPassword;
-    }
-
-    public void setWsPassword(String wsPassword) {
-        this.wsPassword = wsPassword;
+    public void setTokenEndpoint(String tokenEndpoint) {
+        this.tokenEndpoint = tokenEndpoint;
     }
 }

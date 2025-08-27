@@ -51,7 +51,7 @@ public class FileClientTests extends AbstractTests {
         assertTrue(fileContent.equals(new String(b2)));
 
         //test delete file
-        fileClient.deleteFile(fileName, FileType.UNPROCESSED);
+        fileClient.deleteFile(fileName);
         try {
             byte[] b3 = Files.readAllBytes(Paths.get(rootFolder + FileSystems.getDefault().getSeparator() + fileName));
             assertTrue(b3 == null);

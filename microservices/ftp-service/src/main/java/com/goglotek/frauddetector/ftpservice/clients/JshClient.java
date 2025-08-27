@@ -21,6 +21,7 @@ public class JshClient implements Client {
     private static final Logger logger = LogManager.getLogger(JshClient.class);
 
     private JSch jsch;
+
     @Autowired
     private Cryptography cryptography;
 

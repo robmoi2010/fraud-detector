@@ -56,6 +56,28 @@ public class Config {
     @Value("${application.custom.jwt.test.client-secret}")
     private String testClientSecret;
 
+    @Value("${application.custom.jwt.client-credentials-role-name}")
+    private String machineRoleName;
+
+    @Value("${goglotek.core.system_timestamp_format}")
+    private String internalTimestampFormat;
+
+    public String getInternalTimestampFormat() {
+        return internalTimestampFormat;
+    }
+
+    public void setInternalTimestampFormat(String internalTimestampFormat) {
+        this.internalTimestampFormat = internalTimestampFormat;
+    }
+
+    public String getMachineRoleName() {
+        return machineRoleName;
+    }
+
+    public void setMachineRoleName(String machineRoleName) {
+        this.machineRoleName = machineRoleName;
+    }
+
     public String getTestClientId() {
         return testClientId;
     }

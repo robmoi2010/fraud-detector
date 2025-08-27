@@ -5,5 +5,5 @@ import com.goglotek.frauddetector.dataprocessorservice.dto.FileDto;
 import java.util.List;
 
 public interface DataProcessingService {
-    void processData(List<FileDto> event);
+    void processData(List<FileDto> event) throws Exception;
 }

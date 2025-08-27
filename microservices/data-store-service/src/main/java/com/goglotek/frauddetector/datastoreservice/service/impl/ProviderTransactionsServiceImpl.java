@@ -1,11 +1,17 @@
 package com.goglotek.frauddetector.datastoreservice.service.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import com.goglotek.frauddetector.datastoreservice.dto.CreateProviderTransactionsDto;
+import com.goglotek.frauddetector.datastoreservice.exception.FileNotFoundException;
 import com.goglotek.frauddetector.datastoreservice.exception.GoglotekException;
+import com.goglotek.frauddetector.datastoreservice.model.Files;
 import com.goglotek.frauddetector.datastoreservice.model.ProviderTransactions;
 import com.goglotek.frauddetector.datastoreservice.repository.ProviderTransactionsRepository;
+import com.goglotek.frauddetector.datastoreservice.service.FilesService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -21,6 +27,9 @@ import com.goglotek.frauddetector.datastoreservice.service.ProviderTransactionsS
 public class ProviderTransactionsServiceImpl implements ProviderTransactionsService {
     @Autowired
     ProviderTransactionsRepository providerTransactionsRepository;
+
+    @Autowired
+    FilesService filesService;
 
     @Override
     public List<ProviderTransactions> list() {
@@ -103,11 +112,34 @@ public class ProviderTransactionsServiceImpl implements ProviderTransactionsServ
 
     @Transactional
     @Override
-    public void createAll(List<ProviderTransactions> transactions) throws GoglotekException {
+    public List<ProviderTransactions> createAll(List<CreateProviderTransactionsDto> transactionsDtoList, Files file) throws GoglotekException {
+        List<ProviderTransactions> transactions = new ArrayList<>();
+        for (CreateProviderTransactionsDto dto : transactionsDtoList) {
+            ProviderTransactions p = new ProviderTransactions();
+            p.setClientAccount(dto.getClientAccount());
+            p.setAmount(dto.getAmount());
+            p.setTransactionId(dto.getId());
+            p.setCreatedDate(new Date());
+            p.setDetails(dto.getDetails());
+            p.setTransactionTime(dto.getTransactionTimestamp());
+            p.setFileId(file.getFileId());
+            p.setModifiedDate(new Date());
+            transactions.add(p);
+        }
         List<ProviderTransactions> l = providerTransactionsRepository.saveAll(transactions);
         if (l.size() != transactions.size()) {
             throw new GoglotekException("Error persisting provider transactions. Changes have been rolled back");
         }
+        return l;
+    }
+
+    @Override
+    public List<ProviderTransactions> findByFileGlobalId(String fileGlobalId) throws GoglotekException {
+        Files file = filesService.getFileByGlobalId(fileGlobalId);
+        ProviderTransactions trans = new ProviderTransactions();
+        trans.setFileId(file.getFileId());
+        Example<ProviderTransactions> example = Example.of(trans);
+        return providerTransactionsRepository.findAll(example);
     }
 
     @Override

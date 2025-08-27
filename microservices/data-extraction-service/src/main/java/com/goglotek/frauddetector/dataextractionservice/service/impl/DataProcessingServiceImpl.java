@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goglotek.frauddetector.dataextractionservice.configuration.Config;
 import com.goglotek.frauddetector.dataextractionservice.client.FileClient;
 import com.goglotek.frauddetector.dataextractionservice.cryptography.Cryptography;
+import com.goglotek.frauddetector.dataextractionservice.dto.FileType;
 import com.goglotek.frauddetector.dataextractionservice.exception.GoglotekException;
 import com.goglotek.frauddetector.dataextractionservice.extractors.DataExtractor;
 import com.goglotek.frauddetector.dataextractionservice.dto.FileDto;
@@ -35,7 +36,7 @@ public class DataProcessingServiceImpl implements DataProcessingService {
     @Autowired
     private DataExtractor dataExtractor;
 
-    @Autowired
+
     ObjectMapper mapper;
 
     ResourceLoader resourceLoader;
@@ -44,8 +45,9 @@ public class DataProcessingServiceImpl implements DataProcessingService {
     private final String SCHEMA_PATH = "/Schema.json";
 
     @Autowired
-    public DataProcessingServiceImpl(ResourceLoader resourceLoader) {
+    public DataProcessingServiceImpl(ResourceLoader resourceLoader, ObjectMapper mapper) {
         this.resourceLoader = resourceLoader;
+        this.mapper = mapper;
         this.schema = getSchema();
     }
 
@@ -62,14 +64,32 @@ public class DataProcessingServiceImpl implements DataProcessingService {
     @Override
     public TransactionsDto extractFilesData(FileDto file) throws GoglotekException, IOException {
         TransactionsDto transactionsDto = new TransactionsDto();
+
         byte[] encryptedFile = fileClient.getFile(file.getAbsolutePath());
         if (encryptedFile == null) {
             throw new GoglotekException("File Not found");
         }
         byte[] decryptedFile = cryptography.decrypt(encryptedFile, config.getEncryptionKey(), config.getEncryptionInitVector());
-        transactionsDto.setTransactions(dataExtractor.extractTransactions(decryptedFile, this.schema));
-        transactionsDto.setFromDate(dataExtractor.getFromDate());
-        transactionsDto.setToDate(dataExtractor.getToDate());
+        try {
+            transactionsDto.setTransactions(dataExtractor.extractTransactions(decryptedFile, this.schema));
+            transactionsDto.setFromDate(dataExtractor.getFromDate());
+            transactionsDto.setToDate(dataExtractor.getToDate());
+
+            //Move file to processed folder
+            fileClient.saveFile(decryptedFile, file.getAbsolutePath(), FileType.PROCESSED);
+
+            //delete file from stage folder
+            fileClient.deleteFile(file.getAbsolutePath());
+        } catch (Exception e) {
+            //send erroneous file to error folder
+            fileClient.saveFile(encryptedFile, file.getAbsolutePath(), FileType.ERROR);
+
+            //delete file from stage folder
+            fileClient.deleteFile(file.getAbsolutePath());
+
+            //rethrow exception
+            throw e;
+        }
         return transactionsDto;
     }
 

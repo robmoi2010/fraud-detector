@@ -1,24 +1,32 @@
 package com.goglotek.frauddetector.dataextractionservice.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goglotek.frauddetector.dataextractionservice.configuration.Config;
+import kotlin.jvm.Volatile;
 import okhttp3.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Base64;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+//Not thread safe. For usage in multithreaded environment make the class thread-safe of create new instance of the class for each thread or usage
 @Component
 public class RestClient {
     @Autowired
     private OauthToken token;
+
     @Autowired
     private Config config;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
+
     private static OkHttpClient client = null;
-    public static final MediaType JSON = MediaType.get("application/json");
+    private final int MAX_AUTH_RETRY = 10;
+    private volatile int reAuthenticationCount = 0;
 
     public String get(String url, Map<String, String> headersMap) throws Exception {
         if (client == null) {
@@ -27,12 +35,26 @@ public class RestClient {
         if (headersMap == null) {
             headersMap = new HashMap<>();
         }
-        headersMap.put("Content-type", "application/json");
+        if (headersMap.get("Content-type") == null) {
+            headersMap.put("Content-type", "application/json");
+        }
         headersMap.put("Authorization", "Bearer " + getToken());
 
         Request request = new Request.Builder().url(url).get().headers(Headers.of(headersMap)).build();
         try (Response response = client.newCall(request).execute()) {
-            return response.body().string();
+            String resp = response.body().string();
+            if (hasInvalidOrExpiredTokenError(resp)) {
+                //nullify token to force re-authentication
+                token = null;
+                if (reAuthenticationCount < MAX_AUTH_RETRY) {
+                    reAuthenticationCount++;
+                    return get(url, headersMap);
+                } else {
+                    reAuthenticationCount = 0;
+                    return resp;
+                }
+            }
+            return resp;
         }
     }
 
@@ -47,14 +69,28 @@ public class RestClient {
         if (headersMap == null) {
             headersMap = new HashMap<>();
         }
-        headersMap.put("Content-type", "application/json");
+        if (headersMap.get("Content-type") == null) {
+            headersMap.put("Content-type", "application/json");
+        }
         headersMap.put("Authorization", "Bearer " + getToken());
 
-        RequestBody body = RequestBody.create(data, JSON);
+        RequestBody body = RequestBody.create(data, MediaType.get(headersMap.get("Content-type")));
 
         Request request = new Request.Builder().url(url).headers(Headers.of(headersMap)).put(body).build();
         try (Response response = client.newCall(request).execute()) {
-            return response.body().string();
+            String resp = response.body().string();
+            if (hasInvalidOrExpiredTokenError(resp)) {
+                //nullify token to force re-authentication
+                token = null;
+                if (reAuthenticationCount < MAX_AUTH_RETRY) {
+                    reAuthenticationCount++;
+                    return put(url, data, headersMap);
+                } else {
+                    reAuthenticationCount = 0;
+                    return resp;
+                }
+            }
+            return resp;
         }
     }
 
@@ -62,46 +98,76 @@ public class RestClient {
         return put(url, data, null);
     }
 
-    public String post(String url, String data, Map<String, String> headersMap) throws Exception {
+    public String post(String url, String data, Map<String, String> headersMap, boolean isTokenRequest) throws Exception {
         if (client == null) {
             client = new OkHttpClient();
         }
         if (headersMap == null) {
             headersMap = new HashMap<>();
         }
-        headersMap.put("Content-type", "application/json");
-        headersMap.put("Authorization", "Bearer " + getToken());
+        if (headersMap.get("Content-type") == null) {
+            headersMap.put("Content-type", "application/json");
+        }
+        if (!isTokenRequest) {
+            headersMap.put("Authorization", "Bearer " + getToken());
+        }
 
-        RequestBody body = RequestBody.create(data, JSON);
+        RequestBody body = RequestBody.create(data, MediaType.get(headersMap.get("Content-type")));
 
         Request request = new Request.Builder().url(url).headers(Headers.of(headersMap)).post(body).build();
 
         try (Response response = client.newCall(request).execute()) {
             String resp = response.body().string();
-            //check for expired token response and refresh token
+            if (hasInvalidOrExpiredTokenError(resp)) {
+                //nullify token to force re-authentication
+                token = null;
+                if (reAuthenticationCount < MAX_AUTH_RETRY) {
+                    reAuthenticationCount++;
+                    return post(url, data, headersMap, isTokenRequest);
+                } else {
+                    reAuthenticationCount = 0;
+                    return resp;
+                }
+            }
             return resp;
         }
     }
 
     public String post(String url, String data) throws Exception {
-        return post(url, data, null);
+        return post(url, data, null, false);
+    }
+
+    boolean hasInvalidOrExpiredTokenError(String response) {
+        response = response.toLowerCase();
+        if (response.contains("error")) {
+            if (response.contains("invalid") || response.contains("expired")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private String getToken() throws Exception {
-        if (token.getToken() == null) {
-            token.setToken(getTokenFromServer());
-            token.setUpdatedOn(new Date());
-            return token.getToken();
+        if (token == null || token.getAccessToken() == null || hasTokenExpired()) {
+            String tokenResp = getTokenFromServer();
+            token = objectMapper.readValue(tokenResp, OauthToken.class);
+            return token.getAccessToken();
         } else {
-            return token.getToken();
+            return token.getAccessToken();
         }
     }
 
+    private boolean hasTokenExpired() {
+        //TODO:
+        return false;
+    }
+
     private String getTokenFromServer() throws Exception {
-        String encoded = "Basic " + Base64.getEncoder().encode((config.getOauthId() + ":" + config.getOauthSecret()).getBytes());
+        String encoded = "Basic " + Base64.getEncoder().encodeToString((config.getClientId() + ":" + config.getClientSecret()).getBytes());
         Map<String, String> headers = new HashMap<>();
         headers.put("Authorization", encoded);
-        String body = "grant_type=password&username=" + config.getWsUsername() + "&password=" + config.getWsPassword();
-        return post(config.getBaseUrl() + "oauth/token", body, headers);
+        headers.put("Content-type", "application/x-www-form-urlencoded");
+        String body = "grant_type=client_credentials&scope=" + config.getScope() + "";
+        return post(config.getBaseUrl() + config.getTokenEndpoint(), body, headers, true);
     }
 }

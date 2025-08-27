@@ -43,7 +43,6 @@ import org.springframework.security.oauth2.server.authorization.token.JwtEncodin
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
-import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
@@ -61,6 +60,9 @@ public class SecurityConfig {
 
     @Autowired
     UsersService usersService;
+
+    @Autowired
+    CustomJwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
     @Bean
     @Order(1)
@@ -89,11 +91,12 @@ public class SecurityConfig {
             throws Exception {
         http.httpBasic(Customizer.withDefaults())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt ->
-                        jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())
-                ))
+                                        jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())
+                                )
+                                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                )
                 .formLogin(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable());
-        http.addFilterBefore(new SpyFilter(), BearerTokenAuthenticationFilter.class);
         return http.build();
     }
 
@@ -108,16 +111,18 @@ public class SecurityConfig {
                 .tokenSettings(TokenSettings.builder().accessTokenTimeToLive(Duration.ofSeconds(config.getAccessTokenValiditySeconds())).build())
                 .scope("READ")
                 .scope("WRITE")
+                .scope(config.getMachineRoleName())
                 .build();
         RegisteredClient dataProcessor = RegisteredClient.withId(UUID.randomUUID().toString())
                 .clientId(config.getDataprocessorClientId())
-                .clientSecret(getPasswordEncoder().encode(config.getDataprocessorClientId()))
+                .clientSecret(getPasswordEncoder().encode(config.getDataprocessorClientSecret()))
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 .tokenSettings(TokenSettings.builder().accessTokenTimeToLive(Duration.ofSeconds(config.getAccessTokenValiditySeconds())).build())
                 .scope("READ")
                 .scope("WRITE")
+                .scope(config.getMachineRoleName())
                 .build();
         RegisteredClient ui = RegisteredClient.withId(UUID.randomUUID().toString())
                 .clientId(config.getUiClientId())
@@ -188,6 +193,12 @@ public class SecurityConfig {
                                     .map(GrantedAuthority::getAuthority)
                                     .toList());
                 }
+                JwtClaimsSet.Builder claims = context.getClaims();
+                claims.claim("username", principal.getPrincipal());
+                claims.claim("roles",
+                        context.getAuthorizedScopes()
+                );
+
             }
         };
     }

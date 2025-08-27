@@ -7,20 +7,74 @@ import org.springframework.stereotype.Component;
 public class Config {
     @Value("${goglotek.getfiles.endpoint}")
     private String getFilesEndpoint;
-    @Value("${goglotek.gettransactions.endpoint}")
-    private String getTransactionsEndpoint;
+
+    @Value("${goglotek.getprovidertransactions.endpoint}")
+    private String getProviderTransactionsEndpoint;
+
+    @Value("${goglotek.getlocaltransactions.endpoint}")
+    private String getLocalTransactionsEndpoint;
+
     @Value("${goglotek.base_url}")
     private String baseUrl;
-    @Value("${goglotek.OauthId}")
-    private String OauthId;
-    @Value("${goglotek.OauthSecret}")
-    private String OauthSecret;
-    @Value("${goglotek.webservice.username}")
-    private String wsUsername;
-    @Value("${goglotek.webservice.password}")
-    private String wsPassword;
+
     @Value("${truncate_double_to_int}")
     private boolean truncateDoubleAmtToInt;
+
+    @Value("${goglotek.webservice.token_endpoint}")
+    private String tokenEndpoint;
+
+    @Value("${goglotek.webservice.client_id}")
+    private String clientId;
+
+    @Value("${goglotek.webservice.client_secret}")
+    private String clientSecret;
+
+    @Value("${goglotek.webservice.scope}")
+    private String scope;
+
+    @Value("${goglotek.frauddetector.exchange}")
+    private String processingExchange;
+
+    @Value("${goglotek.frauddetector.queue}")
+    private String queue;
+
+    @Value("${goglotek.processing.routing_key}")
+    private String routingKey;
+
+    @Value("${goglotek.core.system_timestamp_format}")
+    private String internalTimestampFormat;
+
+    public String getInternalTimestampFormat() {
+        return internalTimestampFormat;
+    }
+
+    public void setInternalTimestampFormat(String internalTimestampFormat) {
+        this.internalTimestampFormat = internalTimestampFormat;
+    }
+
+    public String getRoutingKey() {
+        return routingKey;
+    }
+
+    public void setRoutingKey(String routingKey) {
+        this.routingKey = routingKey;
+    }
+
+    public String getQueue() {
+        return queue;
+    }
+
+    public void setQueue(String queue) {
+        this.queue = queue;
+    }
+
+    public String getProcessingExchange() {
+        return processingExchange;
+    }
+
+    public void setProcessingExchange(String processingExchange) {
+        this.processingExchange = processingExchange;
+    }
 
     public boolean truncateDoubleAmtToInt() {
         return truncateDoubleAmtToInt;
@@ -38,12 +92,20 @@ public class Config {
         this.getFilesEndpoint = getFilesEndpoint;
     }
 
-    public String getGetTransactionsEndpoint() {
-        return getTransactionsEndpoint;
+    public String getGetProviderTransactionsEndpoint() {
+        return getProviderTransactionsEndpoint;
     }
 
-    public void setGetTransactionsEndpoint(String getTransactionsEndpoint) {
-        this.getTransactionsEndpoint = getTransactionsEndpoint;
+    public void setGetProviderTransactionsEndpoint(String getProviderTransactionsEndpoint) {
+        this.getProviderTransactionsEndpoint = getProviderTransactionsEndpoint;
+    }
+
+    public String getGetLocalTransactionsEndpoint() {
+        return getLocalTransactionsEndpoint;
+    }
+
+    public void setGetLocalTransactionsEndpoint(String getLocalTransactionsEndpoint) {
+        this.getLocalTransactionsEndpoint = getLocalTransactionsEndpoint;
     }
 
     public String getBaseUrl() {
@@ -54,35 +116,39 @@ public class Config {
         this.baseUrl = baseUrl;
     }
 
-    public String getOauthId() {
-        return OauthId;
+    public boolean isTruncateDoubleAmtToInt() {
+        return truncateDoubleAmtToInt;
     }
 
-    public void setOauthId(String oauthId) {
-        OauthId = oauthId;
+    public String getTokenEndpoint() {
+        return tokenEndpoint;
     }
 
-    public String getOauthSecret() {
-        return OauthSecret;
+    public void setTokenEndpoint(String tokenEndpoint) {
+        this.tokenEndpoint = tokenEndpoint;
     }
 
-    public void setOauthSecret(String oauthSecret) {
-        OauthSecret = oauthSecret;
+    public String getClientId() {
+        return clientId;
     }
 
-    public String getWsUsername() {
-        return wsUsername;
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
 
-    public void setWsUsername(String wsUsername) {
-        this.wsUsername = wsUsername;
+    public String getClientSecret() {
+        return clientSecret;
     }
 
-    public String getWsPassword() {
-        return wsPassword;
+    public void setClientSecret(String clientSecret) {
+        this.clientSecret = clientSecret;
     }
 
-    public void setWsPassword(String wsPassword) {
-        this.wsPassword = wsPassword;
+    public String getScope() {
+        return scope;
+    }
+
+    public void setScope(String scope) {
+        this.scope = scope;
     }
 }
