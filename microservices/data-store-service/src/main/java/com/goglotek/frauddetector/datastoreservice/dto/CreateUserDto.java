@@ -1,106 +1,129 @@
+/*
+ *
+ *  * Copyright (C) 2025 Robert Moi, Goglotek LTD
+ *  *
+ *  * This file is part of the Fraud Detector System.
+ *  *
+ *  * The Fraud Detector System is free software: you can redistribute it and/or modify
+ *  * it under the terms of the GNU General Public License as published by
+ *  * the Free Software Foundation, either version 3 of the License, or
+ *  * (at your option) any later version.
+ *  *
+ *  * The Fraud Detector System is distributed in the hope that it will be useful,
+ *  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  * GNU General Public License for more details.
+ *  *
+ *  * You should have received a copy of the GNU General Public License
+ *  * along with the Fraud Detector System. If not, see <https://www.gnu.org/licenses/>.
+ *
+ *
+ */
+
 package com.goglotek.frauddetector.datastoreservice.dto;
 
 import java.util.Date;
 
 public class CreateUserDto {
-	private String username;
-	private String email;
-	private String password;
-	private String firstName;
-	private String lastName;
-	private boolean accountVerified;
-	private int failedLoginAttempts;
-	private boolean loginDisabled;
-	private Date createdOn;
-	private Date updatedOn;
-	private boolean active;
 
-	public Date getCreatedOn() {
-		return createdOn;
-	}
+  private String username;
+  private String email;
+  private String password;
+  private String firstName;
+  private String lastName;
+  private boolean accountVerified;
+  private int failedLoginAttempts;
+  private boolean loginDisabled;
+  private Date createdOn;
+  private Date updatedOn;
+  private boolean active;
 
-	public void setCreatedOn(Date createdOn) {
-		this.createdOn = createdOn;
-	}
+  public Date getCreatedOn() {
+    return createdOn;
+  }
 
-	public Date getUpdatedOn() {
-		return updatedOn;
-	}
+  public void setCreatedOn(Date createdOn) {
+    this.createdOn = createdOn;
+  }
 
-	public void setUpdatedOn(Date updatedOn) {
-		this.updatedOn = updatedOn;
-	}
+  public Date getUpdatedOn() {
+    return updatedOn;
+  }
 
-	public boolean isActive() {
-		return active;
-	}
+  public void setUpdatedOn(Date updatedOn) {
+    this.updatedOn = updatedOn;
+  }
 
-	public void setActive(boolean active) {
-		this.active = active;
-	}
+  public boolean isActive() {
+    return active;
+  }
 
-	public String getUsername() {
-		return username;
-	}
+  public void setActive(boolean active) {
+    this.active = active;
+  }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+  public String getUsername() {
+    return username;
+  }
 
-	public String getEmail() {
-		return email;
-	}
+  public void setUsername(String username) {
+    this.username = username;
+  }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+  public String getEmail() {
+    return email;
+  }
 
-	public String getPassword() {
-		return password;
-	}
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+  public String getPassword() {
+    return password;
+  }
 
-	public String getFirstName() {
-		return firstName;
-	}
+  public void setPassword(String password) {
+    this.password = password;
+  }
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
+  public String getFirstName() {
+    return firstName;
+  }
 
-	public String getLastName() {
-		return lastName;
-	}
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
+  public String getLastName() {
+    return lastName;
+  }
 
-	public boolean isAccountVerified() {
-		return accountVerified;
-	}
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
 
-	public void setAccountVerified(boolean accountVerified) {
-		this.accountVerified = accountVerified;
-	}
+  public boolean isAccountVerified() {
+    return accountVerified;
+  }
 
-	public int getFailedLoginAttempts() {
-		return failedLoginAttempts;
-	}
+  public void setAccountVerified(boolean accountVerified) {
+    this.accountVerified = accountVerified;
+  }
 
-	public void setFailedLoginAttempts(int failedLoginAttempts) {
-		this.failedLoginAttempts = failedLoginAttempts;
-	}
+  public int getFailedLoginAttempts() {
+    return failedLoginAttempts;
+  }
 
-	public boolean isLoginDisabled() {
-		return loginDisabled;
-	}
+  public void setFailedLoginAttempts(int failedLoginAttempts) {
+    this.failedLoginAttempts = failedLoginAttempts;
+  }
 
-	public void setLoginDisabled(boolean loginDisabled) {
-		this.loginDisabled = loginDisabled;
-	}
+  public boolean isLoginDisabled() {
+    return loginDisabled;
+  }
+
+  public void setLoginDisabled(boolean loginDisabled) {
+    this.loginDisabled = loginDisabled;
+  }
 
 }

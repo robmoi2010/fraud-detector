@@ -1,3 +1,25 @@
+/*
+ *
+ *  * Copyright (C) 2025 Robert Moi, Goglotek LTD
+ *  *
+ *  * This file is part of the Fraud Detector System.
+ *  *
+ *  * The Fraud Detector System is free software: you can redistribute it and/or modify
+ *  * it under the terms of the GNU General Public License as published by
+ *  * the Free Software Foundation, either version 3 of the License, or
+ *  * (at your option) any later version.
+ *  *
+ *  * The Fraud Detector System is distributed in the hope that it will be useful,
+ *  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  * GNU General Public License for more details.
+ *  *
+ *  * You should have received a copy of the GNU General Public License
+ *  * along with the Fraud Detector System. If not, see <https://www.gnu.org/licenses/>.
+ *
+ *
+ */
+
 package com.goglotek.frauddetector.datastoreservice.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -5,212 +27,213 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Config {
-    @Value("${application.custom.jwt.dataextractor.clientId}")
-    private String dataextractorClientId;
 
-    @Value("${application.custom.jwt.dataextractor.client-secret}")
-    private String dataextractorClientSecret;
+  @Value("${application.custom.jwt.dataextractor.clientId}")
+  private String dataextractorClientId;
 
-    @Value("${application.custom.jwt.dataprocessor.clientId}")
-    private String dataprocessorClientId;
+  @Value("${application.custom.jwt.dataextractor.client-secret}")
+  private String dataextractorClientSecret;
 
-    @Value("${application.custom.jwt.dataprocessor.client-secret}")
-    private String dataprocessorClientSecret;
+  @Value("${application.custom.jwt.dataprocessor.clientId}")
+  private String dataprocessorClientId;
 
-    @Value("${application.custom.jwt.ui.clientId}")
-    private String uiClientId;
+  @Value("${application.custom.jwt.dataprocessor.client-secret}")
+  private String dataprocessorClientSecret;
 
-    @Value("${application.custom.jwt.ui.client-secret}")
-    private String uiClientSecret;
+  @Value("${application.custom.jwt.ui.clientId}")
+  private String uiClientId;
 
-    @Value("${application.custom.jwt.private-key}")
-    private String privateKey;
+  @Value("${application.custom.jwt.ui.client-secret}")
+  private String uiClientSecret;
 
-    @Value("${application.custom.jwt.public-key}")
-    private String publicKey;
+  @Value("${application.custom.jwt.private-key}")
+  private String privateKey;
 
-    @Value("${application.custom.jwt.accessTokenValidititySeconds}") // 12 hours
-    private int accessTokenValiditySeconds;
+  @Value("${application.custom.jwt.public-key}")
+  private String publicKey;
 
-    @Value("${application.custom.jwt.authorizedGrantTypes}")
-    private String[] authorizedGrantTypes;
+  @Value("${application.custom.jwt.accessTokenValidititySeconds}") // 12 hours
+  private int accessTokenValiditySeconds;
 
-    @Value("${application.custom.jwt.refreshTokenValiditySeconds}") // 30 days
-    private int refreshTokenValiditySeconds;
+  @Value("${application.custom.jwt.authorizedGrantTypes}")
+  private String[] authorizedGrantTypes;
 
-    @Value("${goglotek.cryptography.encryption_key}")
-    private String encryptionKey;
+  @Value("${application.custom.jwt.refreshTokenValiditySeconds}") // 30 days
+  private int refreshTokenValiditySeconds;
 
-    @Value("${goglotek.cryptography.init_vector}")
-    private String encryptionInitVector;
+  @Value("${goglotek.cryptography.encryption_key}")
+  private String encryptionKey;
 
-    @Value("${application.custom.jwt.redirectUrl}")
-    private String redirectUrl;
+  @Value("${goglotek.cryptography.init_vector}")
+  private String encryptionInitVector;
 
-    @Value("${server.port}")
-    private String serverPort;
+  @Value("${application.custom.jwt.redirectUrl}")
+  private String redirectUrl;
 
-    @Value("${application.custom.jwt.test.clientId}")
-    private String testClientId;
+  @Value("${server.port}")
+  private String serverPort;
 
-    @Value("${application.custom.jwt.test.client-secret}")
-    private String testClientSecret;
+  @Value("${application.custom.jwt.test.clientId}")
+  private String testClientId;
 
-    @Value("${application.custom.jwt.client-credentials-role-name}")
-    private String machineRoleName;
+  @Value("${application.custom.jwt.test.client-secret}")
+  private String testClientSecret;
 
-    @Value("${goglotek.core.system_timestamp_format}")
-    private String internalTimestampFormat;
+  @Value("${application.custom.jwt.client-credentials-role-name}")
+  private String machineRoleName;
 
-    public String getInternalTimestampFormat() {
-        return internalTimestampFormat;
-    }
+  @Value("${goglotek.core.system_timestamp_format}")
+  private String internalTimestampFormat;
 
-    public void setInternalTimestampFormat(String internalTimestampFormat) {
-        this.internalTimestampFormat = internalTimestampFormat;
-    }
+  public String getInternalTimestampFormat() {
+    return internalTimestampFormat;
+  }
 
-    public String getMachineRoleName() {
-        return machineRoleName;
-    }
+  public void setInternalTimestampFormat(String internalTimestampFormat) {
+    this.internalTimestampFormat = internalTimestampFormat;
+  }
 
-    public void setMachineRoleName(String machineRoleName) {
-        this.machineRoleName = machineRoleName;
-    }
+  public String getMachineRoleName() {
+    return machineRoleName;
+  }
 
-    public String getTestClientId() {
-        return testClientId;
-    }
+  public void setMachineRoleName(String machineRoleName) {
+    this.machineRoleName = machineRoleName;
+  }
 
-    public void setTestClientId(String testClientId) {
-        this.testClientId = testClientId;
-    }
+  public String getTestClientId() {
+    return testClientId;
+  }
 
-    public String getTestClientSecret() {
-        return testClientSecret;
-    }
+  public void setTestClientId(String testClientId) {
+    this.testClientId = testClientId;
+  }
 
-    public void setTestClientSecret(String testClientSecret) {
-        this.testClientSecret = testClientSecret;
-    }
+  public String getTestClientSecret() {
+    return testClientSecret;
+  }
 
-    public String getServerPort() {
-        return serverPort;
-    }
+  public void setTestClientSecret(String testClientSecret) {
+    this.testClientSecret = testClientSecret;
+  }
 
-    public void setServerPort(String serverPort) {
-        this.serverPort = serverPort;
-    }
+  public String getServerPort() {
+    return serverPort;
+  }
 
-    public String getDataextractorClientId() {
-        return dataextractorClientId;
-    }
+  public void setServerPort(String serverPort) {
+    this.serverPort = serverPort;
+  }
 
-    public void setDataextractorClientId(String dataextractorClientId) {
-        this.dataextractorClientId = dataextractorClientId;
-    }
+  public String getDataextractorClientId() {
+    return dataextractorClientId;
+  }
 
-    public String getDataextractorClientSecret() {
-        return dataextractorClientSecret;
-    }
+  public void setDataextractorClientId(String dataextractorClientId) {
+    this.dataextractorClientId = dataextractorClientId;
+  }
 
-    public void setDataextractorClientSecret(String dataextractorClientSecret) {
-        this.dataextractorClientSecret = dataextractorClientSecret;
-    }
+  public String getDataextractorClientSecret() {
+    return dataextractorClientSecret;
+  }
 
-    public String getDataprocessorClientId() {
-        return dataprocessorClientId;
-    }
+  public void setDataextractorClientSecret(String dataextractorClientSecret) {
+    this.dataextractorClientSecret = dataextractorClientSecret;
+  }
 
-    public void setDataprocessorClientId(String dataprocessorClientId) {
-        this.dataprocessorClientId = dataprocessorClientId;
-    }
+  public String getDataprocessorClientId() {
+    return dataprocessorClientId;
+  }
 
-    public String getDataprocessorClientSecret() {
-        return dataprocessorClientSecret;
-    }
+  public void setDataprocessorClientId(String dataprocessorClientId) {
+    this.dataprocessorClientId = dataprocessorClientId;
+  }
 
-    public void setDataprocessorClientSecret(String dataprocessorClientSecret) {
-        this.dataprocessorClientSecret = dataprocessorClientSecret;
-    }
+  public String getDataprocessorClientSecret() {
+    return dataprocessorClientSecret;
+  }
 
-    public String getUiClientId() {
-        return uiClientId;
-    }
+  public void setDataprocessorClientSecret(String dataprocessorClientSecret) {
+    this.dataprocessorClientSecret = dataprocessorClientSecret;
+  }
 
-    public void setUiClientId(String uiClientId) {
-        this.uiClientId = uiClientId;
-    }
+  public String getUiClientId() {
+    return uiClientId;
+  }
 
-    public String getUiClientSecret() {
-        return uiClientSecret;
-    }
+  public void setUiClientId(String uiClientId) {
+    this.uiClientId = uiClientId;
+  }
 
-    public void setUiClientSecret(String uiClientSecret) {
-        this.uiClientSecret = uiClientSecret;
-    }
+  public String getUiClientSecret() {
+    return uiClientSecret;
+  }
 
-    public String getPrivateKey() {
-        return privateKey;
-    }
+  public void setUiClientSecret(String uiClientSecret) {
+    this.uiClientSecret = uiClientSecret;
+  }
 
-    public void setPrivateKey(String privateKey) {
-        this.privateKey = privateKey;
-    }
+  public String getPrivateKey() {
+    return privateKey;
+  }
 
-    public String getPublicKey() {
-        return publicKey;
-    }
+  public void setPrivateKey(String privateKey) {
+    this.privateKey = privateKey;
+  }
 
-    public void setPublicKey(String publicKey) {
-        this.publicKey = publicKey;
-    }
+  public String getPublicKey() {
+    return publicKey;
+  }
 
-    public int getAccessTokenValiditySeconds() {
-        return accessTokenValiditySeconds;
-    }
+  public void setPublicKey(String publicKey) {
+    this.publicKey = publicKey;
+  }
 
-    public void setAccessTokenValiditySeconds(int accessTokenValiditySeconds) {
-        this.accessTokenValiditySeconds = accessTokenValiditySeconds;
-    }
+  public int getAccessTokenValiditySeconds() {
+    return accessTokenValiditySeconds;
+  }
 
-    public String[] getAuthorizedGrantTypes() {
-        return authorizedGrantTypes;
-    }
+  public void setAccessTokenValiditySeconds(int accessTokenValiditySeconds) {
+    this.accessTokenValiditySeconds = accessTokenValiditySeconds;
+  }
 
-    public void setAuthorizedGrantTypes(String[] authorizedGrantTypes) {
-        this.authorizedGrantTypes = authorizedGrantTypes;
-    }
+  public String[] getAuthorizedGrantTypes() {
+    return authorizedGrantTypes;
+  }
 
-    public int getRefreshTokenValiditySeconds() {
-        return refreshTokenValiditySeconds;
-    }
+  public void setAuthorizedGrantTypes(String[] authorizedGrantTypes) {
+    this.authorizedGrantTypes = authorizedGrantTypes;
+  }
 
-    public void setRefreshTokenValiditySeconds(int refreshTokenValiditySeconds) {
-        this.refreshTokenValiditySeconds = refreshTokenValiditySeconds;
-    }
+  public int getRefreshTokenValiditySeconds() {
+    return refreshTokenValiditySeconds;
+  }
 
-    public String getEncryptionKey() {
-        return encryptionKey;
-    }
+  public void setRefreshTokenValiditySeconds(int refreshTokenValiditySeconds) {
+    this.refreshTokenValiditySeconds = refreshTokenValiditySeconds;
+  }
 
-    public void setEncryptionKey(String encryptionKey) {
-        this.encryptionKey = encryptionKey;
-    }
+  public String getEncryptionKey() {
+    return encryptionKey;
+  }
 
-    public String getEncryptionInitVector() {
-        return encryptionInitVector;
-    }
+  public void setEncryptionKey(String encryptionKey) {
+    this.encryptionKey = encryptionKey;
+  }
 
-    public void setEncryptionInitVector(String encryptionInitVector) {
-        this.encryptionInitVector = encryptionInitVector;
-    }
+  public String getEncryptionInitVector() {
+    return encryptionInitVector;
+  }
 
-    public String getRedirectUrl() {
-        return redirectUrl;
-    }
+  public void setEncryptionInitVector(String encryptionInitVector) {
+    this.encryptionInitVector = encryptionInitVector;
+  }
 
-    public void setRedirectUrl(String redirectUrl) {
-        this.redirectUrl = redirectUrl;
-    }
+  public String getRedirectUrl() {
+    return redirectUrl;
+  }
+
+  public void setRedirectUrl(String redirectUrl) {
+    this.redirectUrl = redirectUrl;
+  }
 }

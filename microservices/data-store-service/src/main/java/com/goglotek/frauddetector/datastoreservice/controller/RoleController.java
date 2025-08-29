@@ -1,7 +1,31 @@
+/*
+ *
+ *  * Copyright (C) 2025 Robert Moi, Goglotek LTD
+ *  *
+ *  * This file is part of the Fraud Detector System.
+ *  *
+ *  * The Fraud Detector System is free software: you can redistribute it and/or modify
+ *  * it under the terms of the GNU General Public License as published by
+ *  * the Free Software Foundation, either version 3 of the License, or
+ *  * (at your option) any later version.
+ *  *
+ *  * The Fraud Detector System is distributed in the hope that it will be useful,
+ *  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  * GNU General Public License for more details.
+ *  *
+ *  * You should have received a copy of the GNU General Public License
+ *  * along with the Fraud Detector System. If not, see <https://www.gnu.org/licenses/>.
+ *
+ *
+ */
+
 package com.goglotek.frauddetector.datastoreservice.controller;
 
+import com.goglotek.frauddetector.datastoreservice.dto.FilterModel;
+import com.goglotek.frauddetector.datastoreservice.dto.RoleDto;
+import com.goglotek.frauddetector.datastoreservice.service.RoleService;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,26 +35,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.goglotek.frauddetector.datastoreservice.dto.FilterModel;
-import com.goglotek.frauddetector.datastoreservice.dto.RoleDto;
-import com.goglotek.frauddetector.datastoreservice.service.RoleService;
-
 @RequestMapping("roles")
 @RestController
 @PreAuthorize("hasAuthority('ROLE_USER')")
 public class RoleController {
-	@Autowired
-	private RoleService roleService;
 
-	@RequestMapping(value = "/filter", method = RequestMethod.POST, produces = "application/json")
-	public @ResponseBody RoleDto filteredRoles(@RequestParam(name = "page", required = true) Integer page,
-                                               @RequestParam(name = "limit", required = true) Integer limit,
-                                               @RequestParam(name = "order_by", required = true) String order,
-                                               @RequestParam(name = "direction", required = true) String direction,
-                                               @RequestBody List<FilterModel> filterModel) {
-		RoleDto dto = new RoleDto();
-		dto.setCount(roleService.countAllFilteredPaged(filterModel));
-		dto.setRoles(roleService.findAllFilteredPaged(page, limit, order, direction, filterModel));
-		return dto;
-	}
+  @Autowired
+  private RoleService roleService;
+
+  @RequestMapping(value = "/filter", method = RequestMethod.POST, produces = "application/json")
+  public @ResponseBody RoleDto filteredRoles(
+      @RequestParam(name = "page", required = true) Integer page,
+      @RequestParam(name = "limit", required = true) Integer limit,
+      @RequestParam(name = "order_by", required = true) String order,
+      @RequestParam(name = "direction", required = true) String direction,
+      @RequestBody List<FilterModel> filterModel) {
+    RoleDto dto = new RoleDto();
+    dto.setCount(roleService.countAllFilteredPaged(filterModel));
+    dto.setRoles(roleService.findAllFilteredPaged(page, limit, order, direction, filterModel));
+    return dto;
+  }
 }

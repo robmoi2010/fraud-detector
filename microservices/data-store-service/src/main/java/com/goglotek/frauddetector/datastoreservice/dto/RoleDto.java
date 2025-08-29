@@ -1,27 +1,49 @@
+/*
+ *
+ *  * Copyright (C) 2025 Robert Moi, Goglotek LTD
+ *  *
+ *  * This file is part of the Fraud Detector System.
+ *  *
+ *  * The Fraud Detector System is free software: you can redistribute it and/or modify
+ *  * it under the terms of the GNU General Public License as published by
+ *  * the Free Software Foundation, either version 3 of the License, or
+ *  * (at your option) any later version.
+ *  *
+ *  * The Fraud Detector System is distributed in the hope that it will be useful,
+ *  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  * GNU General Public License for more details.
+ *  *
+ *  * You should have received a copy of the GNU General Public License
+ *  * along with the Fraud Detector System. If not, see <https://www.gnu.org/licenses/>.
+ *
+ *
+ */
+
 package com.goglotek.frauddetector.datastoreservice.dto;
 
+import com.goglotek.frauddetector.datastoreservice.model.Role;
 import java.util.List;
 
-import com.goglotek.frauddetector.datastoreservice.model.Role;
-
 public class RoleDto {
-    private long count;
-    private List<Role> roles;
 
-    public long getCount() {
-        return count;
-    }
+  private long count;
+  private List<Role> roles;
 
-    public void setCount(long count) {
-        this.count = count;
-    }
+  public long getCount() {
+    return count;
+  }
 
-    public List<Role> getRoles() {
-        return roles;
-    }
+  public void setCount(long count) {
+    this.count = count;
+  }
 
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
+  public List<Role> getRoles() {
+    return roles;
+  }
+
+  public void setRoles(List<Role> roles) {
+    this.roles = roles;
+  }
 
 }

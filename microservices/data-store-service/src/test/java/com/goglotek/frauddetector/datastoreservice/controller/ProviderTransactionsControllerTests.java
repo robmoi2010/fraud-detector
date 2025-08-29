@@ -1,4 +1,36 @@
+/*
+ *
+ *  * Copyright (C) 2025 Robert Moi, Goglotek LTD
+ *  *
+ *  * This file is part of the Fraud Detector System.
+ *  *
+ *  * The Fraud Detector System is free software: you can redistribute it and/or modify
+ *  * it under the terms of the GNU General Public License as published by
+ *  * the Free Software Foundation, either version 3 of the License, or
+ *  * (at your option) any later version.
+ *  *
+ *  * The Fraud Detector System is distributed in the hope that it will be useful,
+ *  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  * GNU General Public License for more details.
+ *  *
+ *  * You should have received a copy of the GNU General Public License
+ *  * along with the Fraud Detector System. If not, see <https://www.gnu.org/licenses/>.
+ *
+ *
+ */
+
 package com.goglotek.frauddetector.datastoreservice.controller;
+
+import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goglotek.frauddetector.datastoreservice.AbstractTest;
@@ -9,7 +41,10 @@ import com.goglotek.frauddetector.datastoreservice.exception.GoglotekException;
 import com.goglotek.frauddetector.datastoreservice.model.Files;
 import com.goglotek.frauddetector.datastoreservice.service.FilesService;
 import com.goglotek.frauddetector.datastoreservice.service.ProviderTransactionsService;
-import org.junit.jupiter.api.BeforeAll;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Date;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,96 +53,92 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
-import java.util.*;
-
-import static org.hamcrest.Matchers.containsString;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 
 public class ProviderTransactionsControllerTests extends AbstractTest {
-    @MockitoSpyBean
-    private Config config;
 
-    @MockitoBean
-    private FilesService filesService;
+  @MockitoSpyBean
+  private Config config;
 
-    @MockitoBean
-    private ProviderTransactionsService providerTransactionsService;
+  @MockitoBean
+  private FilesService filesService;
+
+  @MockitoBean
+  private ProviderTransactionsService providerTransactionsService;
 
 
-    @Autowired
-    private Cryptography cryptography;
+  @Autowired
+  private Cryptography cryptography;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+  @Autowired
+  private ObjectMapper objectMapper;
 
-    private String fileName = "file123.csv";
-    private String encryptionKey = "key1234567890987";
-    private String initVector = "vector1234567890";
-    private String fileId = "123123123434234";
-    private List<CreateProviderTransactionsDto> transactions = new ArrayList<>();
-    private final int TOTAL_TRANS = 10;
+  private String fileName = "file123.csv";
+  private String encryptionKey = "key1234567890987";
+  private String initVector = "vector1234567890";
+  private String fileId = "123123123434234";
+  private List<CreateProviderTransactionsDto> transactions = new ArrayList<>();
+  private final int TOTAL_TRANS = 10;
 
-    @BeforeEach
-    public void setUp() throws GoglotekException {
-        transactions = createTransactions();
-        //set up mock objects
-        Files file = new Files();
-        file.setFileName(fileName);
-        file.setGlobalId(fileId);
+  @BeforeEach
+  public void setUp() throws GoglotekException {
+    transactions = createTransactions();
+    //set up mock objects
+    Files file = new Files();
+    file.setFileName(fileName);
+    file.setGlobalId(fileId);
 
-        when(filesService.getFileByGlobalId(anyString())).thenReturn(file);
+    when(filesService.getFileByGlobalId(anyString())).thenReturn(file);
 
-        when(config.getEncryptionInitVector()).thenReturn(initVector);
-        when(config.getEncryptionKey()).thenReturn(encryptionKey);
+    when(config.getEncryptionInitVector()).thenReturn(initVector);
+    when(config.getEncryptionKey()).thenReturn(encryptionKey);
 
-        when(providerTransactionsService.createAll(anyList(), any())).thenReturn(List.of());
+    when(providerTransactionsService.createAll(anyList(), any())).thenReturn(List.of());
 
+  }
+
+  @Test
+  public void shouldSendTransactionsSuccessfully() throws Exception {
+
+    String uri = "/providertransactions/create/{file_global_id}";
+    String trans = objectMapper.writeValueAsString(transactions);
+    String encrypted = Base64.getEncoder().encodeToString(
+        cryptography.encrypt(trans.getBytes(), config.getEncryptionKey(),
+            config.getEncryptionInitVector()));
+
+    mvc.perform(post(uri, fileId)
+            .content(encrypted).accept(MediaType.APPLICATION_JSON_VALUE)
+            .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_USER"))))
+        .andExpect(status().isOk())
+        .andExpect(content().string(containsString("success")));
+  }
+
+  @Test
+  public void shouldFailDueToLackOfPermissions() throws Exception {
+    String uri = "/providertransactions/create/{file_global_id}";
+
+    String trans = objectMapper.writeValueAsString(transactions);
+    String encrypted = Base64.getEncoder().encodeToString(
+        cryptography.encrypt(trans.getBytes(), config.getEncryptionKey(),
+            config.getEncryptionInitVector()));
+
+    mvc.perform(post(uri, fileId)
+            .content(encrypted).accept(MediaType.APPLICATION_JSON_VALUE)
+            .with(jwt().authorities(new SimpleGrantedAuthority("ROLE_XYZ"))))
+        .andExpect(status().isForbidden());
+  }
+
+  private List<CreateProviderTransactionsDto> createTransactions() {
+    List<CreateProviderTransactionsDto> list = new ArrayList<>();
+    for (int i = 0; i < TOTAL_TRANS; i++) {
+      CreateProviderTransactionsDto trans = new CreateProviderTransactionsDto();
+      trans.setAmount((i + 1) * 100d);
+      trans.setCreatedOn(new Date());
+      trans.setDetails("details");
+      trans.setClientAccount("12345" + i);
+      trans.setTransactionTimestamp(new Date());
+      trans.setGroupAccount("12345");
+      list.add(trans);
     }
-
-    @Test
-    public void shouldSendTransactionsSuccessfully() throws Exception {
-
-        String uri = "/providertransactions/create/{file_global_id}";
-        String trans = objectMapper.writeValueAsString(transactions);
-        String encrypted = Base64.getEncoder().encodeToString(cryptography.encrypt(trans.getBytes(), config.getEncryptionKey(), config.getEncryptionInitVector()));
-
-        mvc.perform(post(uri, fileId)
-                        .content(encrypted).accept(MediaType.APPLICATION_JSON_VALUE).with(jwt().authorities(new SimpleGrantedAuthority("ROLE_USER"))))
-                .andExpect(status().isOk())
-                .andExpect(content().string(containsString("success")));
-    }
-
-    @Test
-    public void shouldFailDueToLackOfPermissions() throws Exception {
-        String uri = "/providertransactions/create/{file_global_id}";
-
-        String trans = objectMapper.writeValueAsString(transactions);
-        String encrypted = Base64.getEncoder().encodeToString(cryptography.encrypt(trans.getBytes(), config.getEncryptionKey(), config.getEncryptionInitVector()));
-
-        mvc.perform(post(uri, fileId)
-                        .content(encrypted).accept(MediaType.APPLICATION_JSON_VALUE).with(jwt().authorities(new SimpleGrantedAuthority("ROLE_XYZ"))))
-                .andExpect(status().isForbidden());
-    }
-
-    private List<CreateProviderTransactionsDto> createTransactions() {
-        List<CreateProviderTransactionsDto> list = new ArrayList<>();
-        for (int i = 0; i < TOTAL_TRANS; i++) {
-            CreateProviderTransactionsDto trans = new CreateProviderTransactionsDto();
-            trans.setAmount((i + 1) * 100d);
-            trans.setCreatedOn(new Date());
-            trans.setDetails("details");
-            trans.setClientAccount("12345" + i);
-            trans.setTransactionTimestamp(new Date());
-            trans.setGroupAccount("12345");
-            list.add(trans);
-        }
-        return list;
-    }
+    return list;
+  }
 }

@@ -1,3 +1,25 @@
+/*
+ *
+ *  * Copyright (C) 2025 Robert Moi, Goglotek LTD
+ *  *
+ *  * This file is part of the Fraud Detector System.
+ *  *
+ *  * The Fraud Detector System is free software: you can redistribute it and/or modify
+ *  * it under the terms of the GNU General Public License as published by
+ *  * the Free Software Foundation, either version 3 of the License, or
+ *  * (at your option) any later version.
+ *  *
+ *  * The Fraud Detector System is distributed in the hope that it will be useful,
+ *  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  * GNU General Public License for more details.
+ *  *
+ *  * You should have received a copy of the GNU General Public License
+ *  * along with the Fraud Detector System. If not, see <https://www.gnu.org/licenses/>.
+ *
+ *
+ */
+
 package com.goglotek.frauddetector.dataprocessorservice.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -5,183 +27,184 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Config {
-    @Value("${goglotek.getfiles.endpoint}")
-    private String getFilesEndpoint;
 
-    @Value("${goglotek.getprovidertransactions.endpoint}")
-    private String getProviderTransactionsEndpoint;
+  @Value("${goglotek.getfiles.endpoint}")
+  private String getFilesEndpoint;
 
-    @Value("${goglotek.getlocaltransactions.endpoint}")
-    private String getLocalTransactionsEndpoint;
+  @Value("${goglotek.getprovidertransactions.endpoint}")
+  private String getProviderTransactionsEndpoint;
 
-    @Value("${goglotek.base_url}")
-    private String baseUrl;
+  @Value("${goglotek.getlocaltransactions.endpoint}")
+  private String getLocalTransactionsEndpoint;
 
-    @Value("${truncate_double_to_int}")
-    private boolean truncateDoubleAmtToInt;
+  @Value("${goglotek.base_url}")
+  private String baseUrl;
 
-    @Value("${goglotek.webservice.token_endpoint}")
-    private String tokenEndpoint;
+  @Value("${truncate_double_to_int}")
+  private boolean truncateDoubleAmtToInt;
 
-    @Value("${goglotek.webservice.client_id}")
-    private String clientId;
+  @Value("${goglotek.webservice.token_endpoint}")
+  private String tokenEndpoint;
 
-    @Value("${goglotek.webservice.client_secret}")
-    private String clientSecret;
+  @Value("${goglotek.webservice.client_id}")
+  private String clientId;
 
-    @Value("${goglotek.webservice.scope}")
-    private String scope;
+  @Value("${goglotek.webservice.client_secret}")
+  private String clientSecret;
 
-    @Value("${goglotek.frauddetector.exchange}")
-    private String processingExchange;
+  @Value("${goglotek.webservice.scope}")
+  private String scope;
 
-    @Value("${goglotek.frauddetector.queue}")
-    private String queue;
+  @Value("${goglotek.frauddetector.exchange}")
+  private String processingExchange;
 
-    @Value("${goglotek.processing.routing_key}")
-    private String routingKey;
+  @Value("${goglotek.frauddetector.queue}")
+  private String queue;
 
-    @Value("${goglotek.core.system_timestamp_format}")
-    private String internalTimestampFormat;
+  @Value("${goglotek.processing.routing_key}")
+  private String routingKey;
 
-    @Value("${goglotek.processedtransactions.endpoint}")
-    private String processedTransEndpoint;
+  @Value("${goglotek.core.system_timestamp_format}")
+  private String internalTimestampFormat;
 
-    @Value("${goglotek.cryptography.encryption_key}")
-    private String encryptionKey;
+  @Value("${goglotek.processedtransactions.endpoint}")
+  private String processedTransEndpoint;
 
-    @Value("${goglotek.cryptography.init_vector}")
-    private String initVector;
+  @Value("${goglotek.cryptography.encryption_key}")
+  private String encryptionKey;
 
-    public String getEncryptionKey() {
-        return encryptionKey;
-    }
+  @Value("${goglotek.cryptography.init_vector}")
+  private String initVector;
 
-    public void setEncryptionKey(String encryptionKey) {
-        this.encryptionKey = encryptionKey;
-    }
+  public String getEncryptionKey() {
+    return encryptionKey;
+  }
 
-    public String getInitVector() {
-        return initVector;
-    }
+  public void setEncryptionKey(String encryptionKey) {
+    this.encryptionKey = encryptionKey;
+  }
 
-    public void setInitVector(String initVector) {
-        this.initVector = initVector;
-    }
+  public String getInitVector() {
+    return initVector;
+  }
 
-    public String getProcessedTransEndpoint() {
-        return processedTransEndpoint;
-    }
+  public void setInitVector(String initVector) {
+    this.initVector = initVector;
+  }
 
-    public void setProcessedTransEndpoint(String processedTransEndpoint) {
-        this.processedTransEndpoint = processedTransEndpoint;
-    }
+  public String getProcessedTransEndpoint() {
+    return processedTransEndpoint;
+  }
 
-    public String getInternalTimestampFormat() {
-        return internalTimestampFormat;
-    }
+  public void setProcessedTransEndpoint(String processedTransEndpoint) {
+    this.processedTransEndpoint = processedTransEndpoint;
+  }
 
-    public void setInternalTimestampFormat(String internalTimestampFormat) {
-        this.internalTimestampFormat = internalTimestampFormat;
-    }
+  public String getInternalTimestampFormat() {
+    return internalTimestampFormat;
+  }
 
-    public String getRoutingKey() {
-        return routingKey;
-    }
+  public void setInternalTimestampFormat(String internalTimestampFormat) {
+    this.internalTimestampFormat = internalTimestampFormat;
+  }
 
-    public void setRoutingKey(String routingKey) {
-        this.routingKey = routingKey;
-    }
+  public String getRoutingKey() {
+    return routingKey;
+  }
 
-    public String getQueue() {
-        return queue;
-    }
+  public void setRoutingKey(String routingKey) {
+    this.routingKey = routingKey;
+  }
 
-    public void setQueue(String queue) {
-        this.queue = queue;
-    }
+  public String getQueue() {
+    return queue;
+  }
 
-    public String getProcessingExchange() {
-        return processingExchange;
-    }
+  public void setQueue(String queue) {
+    this.queue = queue;
+  }
 
-    public void setProcessingExchange(String processingExchange) {
-        this.processingExchange = processingExchange;
-    }
+  public String getProcessingExchange() {
+    return processingExchange;
+  }
 
-    public boolean truncateDoubleAmtToInt() {
-        return truncateDoubleAmtToInt;
-    }
+  public void setProcessingExchange(String processingExchange) {
+    this.processingExchange = processingExchange;
+  }
 
-    public void setTruncateDoubleAmtToInt(boolean truncateDoubleAmtToInt) {
-        this.truncateDoubleAmtToInt = truncateDoubleAmtToInt;
-    }
+  public boolean truncateDoubleAmtToInt() {
+    return truncateDoubleAmtToInt;
+  }
 
-    public String getGetFilesEndpoint() {
-        return getFilesEndpoint;
-    }
+  public void setTruncateDoubleAmtToInt(boolean truncateDoubleAmtToInt) {
+    this.truncateDoubleAmtToInt = truncateDoubleAmtToInt;
+  }
 
-    public void setGetFilesEndpoint(String getFilesEndpoint) {
-        this.getFilesEndpoint = getFilesEndpoint;
-    }
+  public String getGetFilesEndpoint() {
+    return getFilesEndpoint;
+  }
 
-    public String getGetProviderTransactionsEndpoint() {
-        return getProviderTransactionsEndpoint;
-    }
+  public void setGetFilesEndpoint(String getFilesEndpoint) {
+    this.getFilesEndpoint = getFilesEndpoint;
+  }
 
-    public void setGetProviderTransactionsEndpoint(String getProviderTransactionsEndpoint) {
-        this.getProviderTransactionsEndpoint = getProviderTransactionsEndpoint;
-    }
+  public String getGetProviderTransactionsEndpoint() {
+    return getProviderTransactionsEndpoint;
+  }
 
-    public String getGetLocalTransactionsEndpoint() {
-        return getLocalTransactionsEndpoint;
-    }
+  public void setGetProviderTransactionsEndpoint(String getProviderTransactionsEndpoint) {
+    this.getProviderTransactionsEndpoint = getProviderTransactionsEndpoint;
+  }
 
-    public void setGetLocalTransactionsEndpoint(String getLocalTransactionsEndpoint) {
-        this.getLocalTransactionsEndpoint = getLocalTransactionsEndpoint;
-    }
+  public String getGetLocalTransactionsEndpoint() {
+    return getLocalTransactionsEndpoint;
+  }
 
-    public String getBaseUrl() {
-        return baseUrl;
-    }
+  public void setGetLocalTransactionsEndpoint(String getLocalTransactionsEndpoint) {
+    this.getLocalTransactionsEndpoint = getLocalTransactionsEndpoint;
+  }
 
-    public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
-    }
+  public String getBaseUrl() {
+    return baseUrl;
+  }
 
-    public boolean isTruncateDoubleAmtToInt() {
-        return truncateDoubleAmtToInt;
-    }
+  public void setBaseUrl(String baseUrl) {
+    this.baseUrl = baseUrl;
+  }
 
-    public String getTokenEndpoint() {
-        return tokenEndpoint;
-    }
+  public boolean isTruncateDoubleAmtToInt() {
+    return truncateDoubleAmtToInt;
+  }
 
-    public void setTokenEndpoint(String tokenEndpoint) {
-        this.tokenEndpoint = tokenEndpoint;
-    }
+  public String getTokenEndpoint() {
+    return tokenEndpoint;
+  }
 
-    public String getClientId() {
-        return clientId;
-    }
+  public void setTokenEndpoint(String tokenEndpoint) {
+    this.tokenEndpoint = tokenEndpoint;
+  }
 
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
+  public String getClientId() {
+    return clientId;
+  }
 
-    public String getClientSecret() {
-        return clientSecret;
-    }
+  public void setClientId(String clientId) {
+    this.clientId = clientId;
+  }
 
-    public void setClientSecret(String clientSecret) {
-        this.clientSecret = clientSecret;
-    }
+  public String getClientSecret() {
+    return clientSecret;
+  }
 
-    public String getScope() {
-        return scope;
-    }
+  public void setClientSecret(String clientSecret) {
+    this.clientSecret = clientSecret;
+  }
 
-    public void setScope(String scope) {
-        this.scope = scope;
-    }
+  public String getScope() {
+    return scope;
+  }
+
+  public void setScope(String scope) {
+    this.scope = scope;
+  }
 }

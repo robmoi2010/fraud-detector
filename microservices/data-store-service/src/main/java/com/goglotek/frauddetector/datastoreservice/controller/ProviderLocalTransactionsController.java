@@ -1,19 +1,44 @@
-package com.goglotek.frauddetector.datastoreservice.controller;
+/*
+ *
+ *  * Copyright (C) 2025 Robert Moi, Goglotek LTD
+ *  *
+ *  * This file is part of the Fraud Detector System.
+ *  *
+ *  * The Fraud Detector System is free software: you can redistribute it and/or modify
+ *  * it under the terms of the GNU General Public License as published by
+ *  * the Free Software Foundation, either version 3 of the License, or
+ *  * (at your option) any later version.
+ *  *
+ *  * The Fraud Detector System is distributed in the hope that it will be useful,
+ *  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  * GNU General Public License for more details.
+ *  *
+ *  * You should have received a copy of the GNU General Public License
+ *  * along with the Fraud Detector System. If not, see <https://www.gnu.org/licenses/>.
+ *
+ *
+ */
 
-import java.io.IOException;
-import java.util.Base64;
-import java.util.Date;
-import java.util.List;
+package com.goglotek.frauddetector.datastoreservice.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.goglotek.frauddetector.datastoreservice.configuration.Config;
 import com.goglotek.frauddetector.datastoreservice.cryptography.Cryptography;
+import com.goglotek.frauddetector.datastoreservice.dto.FilterModel;
 import com.goglotek.frauddetector.datastoreservice.dto.GenericSuccessResponse;
 import com.goglotek.frauddetector.datastoreservice.dto.ProcessedTransactionDto;
+import com.goglotek.frauddetector.datastoreservice.dto.ProviderLocalTransactionsDto;
 import com.goglotek.frauddetector.datastoreservice.exception.GoglotekException;
 import com.goglotek.frauddetector.datastoreservice.exception.InvalidEncryptionKeyException;
+import com.goglotek.frauddetector.datastoreservice.exception.ProviderLocalTransactionsNotFoundException;
 import com.goglotek.frauddetector.datastoreservice.model.ProviderLocalTransactions;
+import com.goglotek.frauddetector.datastoreservice.service.ProviderLocalTransactionsService;
+import java.io.IOException;
+import java.util.Base64;
+import java.util.Date;
+import java.util.List;
 import org.apache.hc.core5.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,90 +50,91 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.goglotek.frauddetector.datastoreservice.dto.FilterModel;
-import com.goglotek.frauddetector.datastoreservice.dto.ProviderLocalTransactionsDto;
-import com.goglotek.frauddetector.datastoreservice.exception.ProviderLocalTransactionsNotFoundException;
-import com.goglotek.frauddetector.datastoreservice.service.ProviderLocalTransactionsService;
-
 @RequestMapping("providerlocaltransactions")
 @RestController
 @PreAuthorize("hasAnyAuthority('ROLE_USER', 'MACHINE_USER')")
 public class ProviderLocalTransactionsController {
-    @Autowired
-    private ProviderLocalTransactionsService providerLocalTransactionsService;
 
-    @Autowired
-    private Cryptography cryptography;
+  @Autowired
+  private ProviderLocalTransactionsService providerLocalTransactionsService;
 
-    @Autowired
-    private Config config;
+  @Autowired
+  private Cryptography cryptography;
 
-    @Autowired
-    private ObjectMapper mapper;
+  @Autowired
+  private Config config;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET, produces = "application/json")
-    public @ResponseBody List<ProviderLocalTransactions> providerLocalTransactions(
-            @RequestParam(name = "page", required = true) Integer page,
-            @RequestParam(name = "limit", required = true) Integer limit,
-            @RequestParam(name = "order_by", required = true) String order,
-            @RequestParam(name = "direction", required = true) String direction) {
-        return providerLocalTransactionsService.findAllPaged(page, limit, order,
-                direction);
+  @Autowired
+  private ObjectMapper mapper;
+
+  @RequestMapping(value = "/", method = RequestMethod.GET, produces = "application/json")
+  public @ResponseBody List<ProviderLocalTransactions> providerLocalTransactions(
+      @RequestParam(name = "page", required = true) Integer page,
+      @RequestParam(name = "limit", required = true) Integer limit,
+      @RequestParam(name = "order_by", required = true) String order,
+      @RequestParam(name = "direction", required = true) String direction) {
+    return providerLocalTransactionsService.findAllPaged(page, limit, order,
+        direction);
+  }
+
+  @RequestMapping(value = "/{provider_local_transaction_id}", method = RequestMethod.GET, produces = "application/json")
+  public @ResponseBody ProviderLocalTransactions providerLocalTransactions(
+      @PathVariable(value = "provider_local_transaction_id", required = true) Long transactionId) {
+    return providerLocalTransactionsService.findById(transactionId)
+        .orElseThrow(() -> new ProviderLocalTransactionsNotFoundException(
+            "transaction with id " + transactionId + " is not found"));
+  }
+
+  @RequestMapping(value = "/filter", method = RequestMethod.POST, produces = "application/json")
+  public @ResponseBody ProviderLocalTransactionsDto filteredTransactions(
+      @RequestParam(name = "page", required = true) Integer page,
+      @RequestParam(name = "limit", required = true) Integer limit,
+      @RequestParam(name = "order_by", required = true) String order,
+      @RequestParam(name = "direction", required = true) String direction,
+      @RequestBody List<FilterModel> filterModel) {
+    ProviderLocalTransactionsDto dto = new ProviderLocalTransactionsDto();
+    dto.setCount(providerLocalTransactionsService.countAllFilteredPaged(filterModel));
+    dto.setProviderLocalTransactions(
+        providerLocalTransactionsService.findAllFilteredPaged(page, limit, order, direction,
+            filterModel));
+    return dto;
+  }
+
+  @RequestMapping(value = "/search", method = RequestMethod.GET, produces = "application/json")
+  public @ResponseBody List<ProviderLocalTransactions> search(@RequestBody String keyword) {
+    return providerLocalTransactionsService.search(keyword.trim().toLowerCase());
+  }
+
+  @RequestMapping(value = "/processed", method = RequestMethod.POST, produces = "application/json")
+  public @ResponseBody GenericSuccessResponse updateProcessedTransactions(
+      @RequestBody String encryptedProcessedTransactions) throws GoglotekException {
+    byte[] decrypted;
+    try {
+      decrypted = cryptography.decrypt(
+          Base64.getDecoder().decode(encryptedProcessedTransactions.getBytes()),
+          config.getEncryptionKey(), config.getEncryptionInitVector());
+    } catch (GoglotekException e) {
+      throw new InvalidEncryptionKeyException(
+          "Invalid encryption key. Send file encrypted with a key recognized by the server.");
     }
 
-    @RequestMapping(value = "/{provider_local_transaction_id}", method = RequestMethod.GET, produces = "application/json")
-    public @ResponseBody ProviderLocalTransactions providerLocalTransactions(
-            @PathVariable(value = "provider_local_transaction_id", required = true) Long transactionId) {
-        return providerLocalTransactionsService.findById(transactionId)
-                .orElseThrow(() -> new ProviderLocalTransactionsNotFoundException(
-                        "transaction with id " + transactionId + " is not found"));
+    ProcessedTransactionDto processedTrans;
+    try {
+      processedTrans = mapper.readValue(decrypted, new TypeReference<ProcessedTransactionDto>() {
+      });
+    } catch (IOException e) {
+      throw new GoglotekException(e, "json deserialization error:" + e.getMessage());
     }
 
-    @RequestMapping(value = "/filter", method = RequestMethod.POST, produces = "application/json")
-    public @ResponseBody ProviderLocalTransactionsDto filteredTransactions(
-            @RequestParam(name = "page", required = true) Integer page,
-            @RequestParam(name = "limit", required = true) Integer limit,
-            @RequestParam(name = "order_by", required = true) String order,
-            @RequestParam(name = "direction", required = true) String direction,
-            @RequestBody List<FilterModel> filterModel) {
-        ProviderLocalTransactionsDto dto = new ProviderLocalTransactionsDto();
-        dto.setCount(providerLocalTransactionsService.countAllFilteredPaged(filterModel));
-        dto.setProviderLocalTransactions(
-                providerLocalTransactionsService.findAllFilteredPaged(page, limit, order, direction, filterModel));
-        return dto;
-    }
+    providerLocalTransactionsService.storeProcessedTransactions(processedTrans);
 
-    @RequestMapping(value = "/search", method = RequestMethod.GET, produces = "application/json")
-    public @ResponseBody List<ProviderLocalTransactions> search(@RequestBody String keyword) {
-        return providerLocalTransactionsService.search(keyword.trim().toLowerCase());
-    }
+    GenericSuccessResponse response = new GenericSuccessResponse();
+    response.setServerTimestamp(new Date());
+    response.setMessage("Successfully stored the processed transactions");
+    response.setSuccess(true);
+    response.setStatusCode(HttpStatus.SC_SUCCESS);
 
-    @RequestMapping(value = "/processed", method = RequestMethod.POST, produces = "application/json")
-    public @ResponseBody GenericSuccessResponse updateProcessedTransactions(@RequestBody String encryptedProcessedTransactions) throws GoglotekException {
-        byte[] decrypted;
-        try {
-            decrypted = cryptography.decrypt(Base64.getDecoder().decode(encryptedProcessedTransactions.getBytes()), config.getEncryptionKey(), config.getEncryptionInitVector());
-        } catch (GoglotekException e) {
-            throw new InvalidEncryptionKeyException("Invalid encryption key. Send file encrypted with a key recognized by the server.");
-        }
+    return response;
 
-        ProcessedTransactionDto processedTrans;
-        try {
-            processedTrans = mapper.readValue(decrypted, new TypeReference<ProcessedTransactionDto>() {
-            });
-        } catch (IOException e) {
-            throw new GoglotekException(e, "json deserialization error:" + e.getMessage());
-        }
-
-        providerLocalTransactionsService.storeProcessedTransactions(processedTrans);
-
-        GenericSuccessResponse response = new GenericSuccessResponse();
-        response.setServerTimestamp(new Date());
-        response.setMessage("Successfully stored the processed transactions");
-        response.setSuccess(true);
-        response.setStatusCode(HttpStatus.SC_SUCCESS);
-
-        return response;
-
-    }
+  }
 }
