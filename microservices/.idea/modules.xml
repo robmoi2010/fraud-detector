@@ -2,8 +2,25 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/data-extraction-service.iml" filepath="$PROJECT_DIR$/.idea/modules/data-extraction-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/data-extraction-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/data-extraction-service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/data-extraction-service.test.iml" filepath="$PROJECT_DIR$/.idea/modules/data-extraction-service.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/data-processor-service.iml" filepath="$PROJECT_DIR$/.idea/modules/data-processor-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/data-processor-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/data-processor-service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/data-processor-service.test.iml" filepath="$PROJECT_DIR$/.idea/modules/data-processor-service.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/data-store-service.iml" filepath="$PROJECT_DIR$/.idea/modules/data-store-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/data-store-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/data-store-service.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/data-store-service.test.iml" filepath="$PROJECT_DIR$/.idea/modules/data-store-service.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ftp-service.iml" filepath="$PROJECT_DIR$/.idea/modules/ftp-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1977926839/ftp-service.GoglotekCypher.iml" filepath="$PROJECT_DIR$/.idea/modules/-1977926839/ftp-service.GoglotekCypher.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/ftp-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/ftp-service.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/microservices.iml" filepath="$PROJECT_DIR$/.idea/microservices.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ftp-service.test.iml" filepath="$PROJECT_DIR$/.idea/modules/ftp-service.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gateway.iml" filepath="$PROJECT_DIR$/.idea/modules/gateway.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gateway.main.iml" filepath="$PROJECT_DIR$/.idea/modules/gateway.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/gateway.test.iml" filepath="$PROJECT_DIR$/.idea/modules/gateway.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/service-registry.iml" filepath="$PROJECT_DIR$/.idea/modules/service-registry.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/service-registry.main.iml" filepath="$PROJECT_DIR$/.idea/modules/service-registry.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/service-registry.test.iml" filepath="$PROJECT_DIR$/.idea/modules/service-registry.test.iml" />
     </modules>
   </component>
 </project>

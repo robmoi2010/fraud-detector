@@ -1,153 +1,181 @@
+/*
+ *
+ *  * Copyright (C) 2025 Robert Moi, Goglotek LTD
+ *  *
+ *  * This file is part of the Fraud Detector System.
+ *  *
+ *  * The Fraud Detector System is free software: you can redistribute it and/or modify
+ *  * it under the terms of the GNU General Public License as published by
+ *  * the Free Software Foundation, either version 3 of the License, or
+ *  * (at your option) any later version.
+ *  *
+ *  * The Fraud Detector System is distributed in the hope that it will be useful,
+ *  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  * GNU General Public License for more details.
+ *  *
+ *  * You should have received a copy of the GNU General Public License
+ *  * along with the Fraud Detector System. If not, see <https://www.gnu.org/licenses/>.
+ *
+ *
+ */
+
 package com.goglotek.frauddetector.datastoreservice.model;
 
-import jakarta.persistence.*;
-import org.springframework.validation.annotation.Validated;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
+import org.springframework.validation.annotation.Validated;
 
 
 @Entity
 @Table(name = "files")
 @Validated
 public class Files implements Serializable {
-    /**
-     *
-     */
-    private static final long serialVersionUID = 251569524834023530L;
-    @Id
-    @Column(name = "file_id")
-    @SequenceGenerator(name = "uploads_sequence", sequenceName = "files_sq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "uploads_sequence")
-    private Long fileId;
 
-    @Column(name = "created_date", nullable = false)
-    private Date createdDate;
+  /**
+   *
+   */
+  private static final long serialVersionUID = 251569524834023530L;
+  @Id
+  @Column(name = "file_id")
+  @SequenceGenerator(name = "uploads_sequence", sequenceName = "files_sq", allocationSize = 1)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "uploads_sequence")
+  private Long fileId;
 
-    @Column(name = "modified_date", nullable = false)
-    private Date modifiedDate;
+  @Column(name = "created_date", nullable = false)
+  private Date createdDate;
 
-    //disable unique setting if the file names are not unique. Implement checks elsewhere to ensure same file is not uploaded twice
-    @Column(name = "filename", nullable = false, unique = true)
-    private String fileName;
+  @Column(name = "modified_date", nullable = false)
+  private Date modifiedDate;
 
-    @Column(name = "transactions_count", nullable = false)
-    private Integer transactionsCount;
+  //disable unique setting if the file names are not unique. Implement checks elsewhere to ensure same file is not uploaded twice
+  @Column(name = "filename", nullable = false, unique = true)
+  private String fileName;
 
-    @Column(name = "processed", nullable = false)
-    private Boolean processed;
+  @Column(name = "transactions_count", nullable = false)
+  private Integer transactionsCount;
 
-    @Column(name = "date_processed", nullable = true)
-    private Date dateProcessed;
+  @Column(name = "processed", nullable = false)
+  private Boolean processed;
 
-    @Column(name = "group_account", nullable = false)
-    private String groupAccount;
+  @Column(name = "date_processed", nullable = true)
+  private Date dateProcessed;
 
-    @Column(name = "from_date", nullable = true)
-    private Date fromDate;
+  @Column(name = "group_account", nullable = false)
+  private String groupAccount;
 
-    @Column(name = "to_date", nullable = true)
-    private Date toDate;
+  @Column(name = "from_date", nullable = true)
+  private Date fromDate;
 
-    @Column(name = "retrieved_by_name", nullable = false)
-    private String retrievedByName;
+  @Column(name = "to_date", nullable = true)
+  private Date toDate;
 
-    @Column(name = "global_id", nullable = false, unique = true)
-    private String globalId;
+  @Column(name = "retrieved_by_name", nullable = false)
+  private String retrievedByName;
 
-    public String getGlobalId() {
-        return globalId;
-    }
+  @Column(name = "global_id", nullable = false, unique = true)
+  private String globalId;
 
-    public void setGlobalId(String globalId) {
-        this.globalId = globalId;
-    }
+  public String getGlobalId() {
+    return globalId;
+  }
 
-    public Long getFileId() {
-        return fileId;
-    }
+  public void setGlobalId(String globalId) {
+    this.globalId = globalId;
+  }
 
-    public void setFileId(Long fileId) {
-        this.fileId = fileId;
-    }
+  public Long getFileId() {
+    return fileId;
+  }
 
-    public Date getCreatedDate() {
-        return createdDate;
-    }
+  public void setFileId(Long fileId) {
+    this.fileId = fileId;
+  }
 
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
+  public Date getCreatedDate() {
+    return createdDate;
+  }
 
-    public Date getModifiedDate() {
-        return modifiedDate;
-    }
+  public void setCreatedDate(Date createdDate) {
+    this.createdDate = createdDate;
+  }
 
-    public void setModifiedDate(Date modifiedDate) {
-        this.modifiedDate = modifiedDate;
-    }
+  public Date getModifiedDate() {
+    return modifiedDate;
+  }
 
-    public String getFileName() {
-        return fileName;
-    }
+  public void setModifiedDate(Date modifiedDate) {
+    this.modifiedDate = modifiedDate;
+  }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
+  public String getFileName() {
+    return fileName;
+  }
 
-    public Integer getTransactionsCount() {
-        return transactionsCount;
-    }
+  public void setFileName(String fileName) {
+    this.fileName = fileName;
+  }
 
-    public void setTransactionsCount(Integer transactionsCount) {
-        this.transactionsCount = transactionsCount;
-    }
+  public Integer getTransactionsCount() {
+    return transactionsCount;
+  }
 
-    public Boolean getProcessed() {
-        return processed;
-    }
+  public void setTransactionsCount(Integer transactionsCount) {
+    this.transactionsCount = transactionsCount;
+  }
 
-    public void setProcessed(Boolean processed) {
-        this.processed = processed;
-    }
+  public Boolean getProcessed() {
+    return processed;
+  }
 
-    public Date getDateProcessed() {
-        return dateProcessed;
-    }
+  public void setProcessed(Boolean processed) {
+    this.processed = processed;
+  }
 
-    public void setDateProcessed(Date dateProcessed) {
-        this.dateProcessed = dateProcessed;
-    }
+  public Date getDateProcessed() {
+    return dateProcessed;
+  }
 
-    public String getGroupAccount() {
-        return groupAccount;
-    }
+  public void setDateProcessed(Date dateProcessed) {
+    this.dateProcessed = dateProcessed;
+  }
 
-    public void setGroupAccount(String groupAccount) {
-        this.groupAccount = groupAccount;
-    }
+  public String getGroupAccount() {
+    return groupAccount;
+  }
 
-    public Date getFromDate() {
-        return fromDate;
-    }
+  public void setGroupAccount(String groupAccount) {
+    this.groupAccount = groupAccount;
+  }
 
-    public void setFromDate(Date fromDate) {
-        this.fromDate = fromDate;
-    }
+  public Date getFromDate() {
+    return fromDate;
+  }
 
-    public Date getToDate() {
-        return toDate;
-    }
+  public void setFromDate(Date fromDate) {
+    this.fromDate = fromDate;
+  }
 
-    public void setToDate(Date toDate) {
-        this.toDate = toDate;
-    }
+  public Date getToDate() {
+    return toDate;
+  }
 
-    public String getRetrievedByName() {
-        return retrievedByName;
-    }
+  public void setToDate(Date toDate) {
+    this.toDate = toDate;
+  }
 
-    public void setRetrievedByName(String retrievedByName) {
-        this.retrievedByName = retrievedByName;
-    }
+  public String getRetrievedByName() {
+    return retrievedByName;
+  }
+
+  public void setRetrievedByName(String retrievedByName) {
+    this.retrievedByName = retrievedByName;
+  }
 }

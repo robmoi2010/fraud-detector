@@ -1,6 +1,6 @@
 export const config =
 {
-    BaseURL: "http://localhost/api/",
+    BaseURL: "http://localhost/",
     OauthId: "user",
     OauthSecret: "password",
     TokeName: "snToken",

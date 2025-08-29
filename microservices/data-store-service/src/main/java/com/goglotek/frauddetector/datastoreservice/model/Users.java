@@ -1,223 +1,251 @@
+/*
+ *
+ *  * Copyright (C) 2025 Robert Moi, Goglotek LTD
+ *  *
+ *  * This file is part of the Fraud Detector System.
+ *  *
+ *  * The Fraud Detector System is free software: you can redistribute it and/or modify
+ *  * it under the terms of the GNU General Public License as published by
+ *  * the Free Software Foundation, either version 3 of the License, or
+ *  * (at your option) any later version.
+ *  *
+ *  * The Fraud Detector System is distributed in the hope that it will be useful,
+ *  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  * GNU General Public License for more details.
+ *  *
+ *  * You should have received a copy of the GNU General Public License
+ *  * along with the Fraud Detector System. If not, see <https://www.gnu.org/licenses/>.
+ *
+ *
+ */
+
 package com.goglotek.frauddetector.datastoreservice.model;
 
-import java.util.ArrayList;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
-import org.springframework.data.repository.cdi.Eager;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "users")
 public class Users implements UserDetails {
-    @Id
-    @Column(name = "user_id")
-    @SequenceGenerator(name = "user_sequence", sequenceName = "user_sq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_sequence")
-    private Long userId;
 
-    @Column(name = "created_on", nullable = true)
-    private Date createdOn;
+  @Id
+  @Column(name = "user_id")
+  @SequenceGenerator(name = "user_sequence", sequenceName = "user_sq", allocationSize = 1)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_sequence")
+  private Long userId;
 
-    @Column(name = "updated_on", nullable = true)
-    private Date updatedOn;
+  @Column(name = "created_on", nullable = true)
+  private Date createdOn;
 
-    @Column(name = "username", nullable = false)
-    private String username;
+  @Column(name = "updated_on", nullable = true)
+  private Date updatedOn;
 
-    @Column(name = "email", nullable = false, unique = true)
-    private String email;
+  @Column(name = "username", nullable = false)
+  private String username;
 
-    @Column(name = "password", nullable = false)
-    @JsonIgnore
-    private String password;
+  @Column(name = "email", nullable = false, unique = true)
+  private String email;
 
-    @Column(name = "firstname", nullable = true)
-    private String firstName;
+  @Column(name = "password", nullable = false)
+  @JsonIgnore
+  private String password;
 
-    @Column(name = "lastname", nullable = true)
-    private String lastName;
+  @Column(name = "firstname", nullable = true)
+  private String firstName;
 
-    @Column(name = "account_verified", nullable = true)
-    private Boolean accountVerified;
+  @Column(name = "lastname", nullable = true)
+  private String lastName;
 
-    @Column(name = "active", nullable = true)
-    private Boolean active;
+  @Column(name = "account_verified", nullable = true)
+  private Boolean accountVerified;
 
-    @Column(name = "failed_login_attempts", nullable = true)
-    private Integer failedLoginAttempts;
+  @Column(name = "active", nullable = true)
+  private Boolean active;
 
-    @Column(name = "login_disabled", nullable = true)
-    private Boolean loginDisabled;
+  @Column(name = "failed_login_attempts", nullable = true)
+  private Integer failedLoginAttempts;
 
-    @ManyToMany
-    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id"))
-    private List<Role> roles;
+  @Column(name = "login_disabled", nullable = true)
+  private Boolean loginDisabled;
 
-    @Column(name = "credentials_not_expired", nullable = false)
-    private Boolean credentialsNotExpired;
+  @ManyToMany
+  @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id"))
+  private List<Role> roles;
 
-    @Column(name = "account_not_expired", nullable = false)
-    private Boolean accountNotExpired;
+  @Column(name = "credentials_not_expired", nullable = false)
+  private Boolean credentialsNotExpired;
 
-    @Column(name = "account_not_locked", nullable = false)
-    private Boolean accountNotLocked;
+  @Column(name = "account_not_expired", nullable = false)
+  private Boolean accountNotExpired;
 
-    @Column(name = "enabled", nullable = false)
-    private Boolean enabled;
-    private Collection<? extends GrantedAuthority> authorities;
+  @Column(name = "account_not_locked", nullable = false)
+  private Boolean accountNotLocked;
 
-    public void setCredentialsNotExpired(Boolean credentialsNotExpired) {
-        this.credentialsNotExpired = credentialsNotExpired;
-    }
+  @Column(name = "enabled", nullable = false)
+  private Boolean enabled;
+  private Collection<? extends GrantedAuthority> authorities;
 
-    public void setAccountNotExpired(Boolean accountNotExpired) {
-        this.accountNotExpired = accountNotExpired;
-    }
+  public void setCredentialsNotExpired(Boolean credentialsNotExpired) {
+    this.credentialsNotExpired = credentialsNotExpired;
+  }
 
-    public void setAccountNotLocked(Boolean accountNotLocked) {
-        this.accountNotLocked = accountNotLocked;
-    }
+  public void setAccountNotExpired(Boolean accountNotExpired) {
+    this.accountNotExpired = accountNotExpired;
+  }
 
-    public void setEnabled(Boolean enabled) {
-        this.enabled = enabled;
-    }
+  public void setAccountNotLocked(Boolean accountNotLocked) {
+    this.accountNotLocked = accountNotLocked;
+  }
 
-    public Long getUserId() {
-        return userId;
-    }
+  public void setEnabled(Boolean enabled) {
+    this.enabled = enabled;
+  }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
+  public Long getUserId() {
+    return userId;
+  }
 
-    public Date getCreatedOn() {
-        return createdOn;
-    }
+  public void setUserId(Long userId) {
+    this.userId = userId;
+  }
 
-    public void setCreatedOn(Date createdOn) {
-        this.createdOn = createdOn;
-    }
+  public Date getCreatedOn() {
+    return createdOn;
+  }
 
-    public Date getUpdatedOn() {
-        return updatedOn;
-    }
+  public void setCreatedOn(Date createdOn) {
+    this.createdOn = createdOn;
+  }
 
-    public void setUpdatedOn(Date updatedOn) {
-        this.updatedOn = updatedOn;
-    }
+  public Date getUpdatedOn() {
+    return updatedOn;
+  }
 
-    public String getUsername() {
-        return username;
-    }
+  public void setUpdatedOn(Date updatedOn) {
+    this.updatedOn = updatedOn;
+  }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return this.accountNotExpired;
-    }
+  public String getUsername() {
+    return username;
+  }
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return this.accountNotLocked;
-    }
+  @Override
+  public boolean isAccountNonExpired() {
+    return this.accountNotExpired;
+  }
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return this.credentialsNotExpired;
-    }
+  @Override
+  public boolean isAccountNonLocked() {
+    return this.accountNotLocked;
+  }
 
-    @Override
-    public boolean isEnabled() {
-        return this.enabled;
-    }
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return this.credentialsNotExpired;
+  }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+  @Override
+  public boolean isEnabled() {
+    return this.enabled;
+  }
 
-    public String getEmail() {
-        return email;
-    }
+  public void setUsername(String username) {
+    this.username = username;
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public String getEmail() {
+    return email;
+  }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.authorities;
-    }
+  public void setEmail(String email) {
+    this.email = email;
+  }
 
-    public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
-        this.authorities = authorities;
-    }
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return this.authorities;
+  }
 
-    public String getPassword() {
-        return password;
-    }
+  public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
+    this.authorities = authorities;
+  }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  public String getPassword() {
+    return password;
+  }
 
-    public String getFirstName() {
-        return firstName;
-    }
+  public void setPassword(String password) {
+    this.password = password;
+  }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+  public String getFirstName() {
+    return firstName;
+  }
 
-    public String getLastName() {
-        return lastName;
-    }
+  public void setFirstName(String firstName) {
+    this.firstName = firstName;
+  }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+  public String getLastName() {
+    return lastName;
+  }
 
-    public Boolean getAccountVerified() {
-        return accountVerified;
-    }
+  public void setLastName(String lastName) {
+    this.lastName = lastName;
+  }
 
-    public void setAccountVerified(Boolean accountVerified) {
-        this.accountVerified = accountVerified;
-    }
+  public Boolean getAccountVerified() {
+    return accountVerified;
+  }
 
-    public Boolean getActive() {
-        return active;
-    }
+  public void setAccountVerified(Boolean accountVerified) {
+    this.accountVerified = accountVerified;
+  }
 
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
+  public Boolean getActive() {
+    return active;
+  }
 
-    public Integer getFailedLoginAttempts() {
-        return failedLoginAttempts;
-    }
+  public void setActive(Boolean active) {
+    this.active = active;
+  }
 
-    public void setFailedLoginAttempts(Integer failedLoginAttempts) {
-        this.failedLoginAttempts = failedLoginAttempts;
-    }
+  public Integer getFailedLoginAttempts() {
+    return failedLoginAttempts;
+  }
 
-    public Boolean getLoginDisabled() {
-        return loginDisabled;
-    }
+  public void setFailedLoginAttempts(Integer failedLoginAttempts) {
+    this.failedLoginAttempts = failedLoginAttempts;
+  }
 
-    public void setLoginDisabled(Boolean loginDisabled) {
-        this.loginDisabled = loginDisabled;
-    }
+  public Boolean getLoginDisabled() {
+    return loginDisabled;
+  }
 
-    public List<Role> getRoles() {
-        return roles;
-    }
+  public void setLoginDisabled(Boolean loginDisabled) {
+    this.loginDisabled = loginDisabled;
+  }
 
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
+  public List<Role> getRoles() {
+    return roles;
+  }
+
+  public void setRoles(List<Role> roles) {
+    this.roles = roles;
+  }
 }

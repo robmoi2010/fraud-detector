@@ -1,88 +1,113 @@
+/*
+ *
+ *  * Copyright (C) 2025 Robert Moi, Goglotek LTD
+ *  *
+ *  * This file is part of the Fraud Detector System.
+ *  *
+ *  * The Fraud Detector System is free software: you can redistribute it and/or modify
+ *  * it under the terms of the GNU General Public License as published by
+ *  * the Free Software Foundation, either version 3 of the License, or
+ *  * (at your option) any later version.
+ *  *
+ *  * The Fraud Detector System is distributed in the hope that it will be useful,
+ *  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  * GNU General Public License for more details.
+ *  *
+ *  * You should have received a copy of the GNU General Public License
+ *  * along with the Fraud Detector System. If not, see <https://www.gnu.org/licenses/>.
+ *
+ *
+ */
+
 package com.goglotek.frauddetector.datastoreservice.dto;
 
 import java.util.Date;
 import java.util.List;
 
 public class ProcessedTransactionDto {
-    private String fileGlobalId;
-    private Date dateProcessed;
-    private Date from;
-    private Date to;
-    private List<ProcessedTransaction> fraudulentTransactions;
-    private List<ProcessedTransaction> missingTransactions;
-    private List<ProcessedTransaction> invalidAmountTransactions;
-    private List<ProcessedTransaction> invalidClientAccountTransactions;
-    private List<ProcessedTransaction> invalidTimestampTransactions;
 
-    public List<ProcessedTransaction> getInvalidClientAccountTransactions() {
-        return invalidClientAccountTransactions;
-    }
+  private String fileGlobalId;
+  private Date dateProcessed;
+  private Date from;
+  private Date to;
+  private List<ProcessedTransaction> fraudulentTransactions;
+  private List<ProcessedTransaction> missingTransactions;
+  private List<ProcessedTransaction> invalidAmountTransactions;
+  private List<ProcessedTransaction> invalidClientAccountTransactions;
+  private List<ProcessedTransaction> invalidTimestampTransactions;
 
-    public void setInvalidClientAccountTransactions(List<ProcessedTransaction> invalidClientAccountTransactions) {
-        this.invalidClientAccountTransactions = invalidClientAccountTransactions;
-    }
+  public List<ProcessedTransaction> getInvalidClientAccountTransactions() {
+    return invalidClientAccountTransactions;
+  }
 
-    public List<ProcessedTransaction> getInvalidTimestampTransactions() {
-        return invalidTimestampTransactions;
-    }
+  public void setInvalidClientAccountTransactions(
+      List<ProcessedTransaction> invalidClientAccountTransactions) {
+    this.invalidClientAccountTransactions = invalidClientAccountTransactions;
+  }
 
-    public void setInvalidTimestampTransactions(List<ProcessedTransaction> invalidTimestampTransactions) {
-        this.invalidTimestampTransactions = invalidTimestampTransactions;
-    }
+  public List<ProcessedTransaction> getInvalidTimestampTransactions() {
+    return invalidTimestampTransactions;
+  }
 
-    public List<ProcessedTransaction> getInvalidAmountTransactions() {
-        return invalidAmountTransactions;
-    }
+  public void setInvalidTimestampTransactions(
+      List<ProcessedTransaction> invalidTimestampTransactions) {
+    this.invalidTimestampTransactions = invalidTimestampTransactions;
+  }
 
-    public void setInvalidAmountTransactions(List<ProcessedTransaction> invalidAmountTransactions) {
-        this.invalidAmountTransactions = invalidAmountTransactions;
-    }
+  public List<ProcessedTransaction> getInvalidAmountTransactions() {
+    return invalidAmountTransactions;
+  }
 
-    public Date getDateProcessed() {
-        return dateProcessed;
-    }
+  public void setInvalidAmountTransactions(List<ProcessedTransaction> invalidAmountTransactions) {
+    this.invalidAmountTransactions = invalidAmountTransactions;
+  }
 
-    public void setDateProcessed(Date dateProcessed) {
-        this.dateProcessed = dateProcessed;
-    }
+  public Date getDateProcessed() {
+    return dateProcessed;
+  }
 
-    public List<ProcessedTransaction> getFraudulentTransactions() {
-        return fraudulentTransactions;
-    }
+  public void setDateProcessed(Date dateProcessed) {
+    this.dateProcessed = dateProcessed;
+  }
 
-    public void setFraudulentTransactions(List<ProcessedTransaction> fraudulentTransactions) {
-        this.fraudulentTransactions = fraudulentTransactions;
-    }
+  public List<ProcessedTransaction> getFraudulentTransactions() {
+    return fraudulentTransactions;
+  }
 
-    public List<ProcessedTransaction> getMissingTransactions() {
-        return missingTransactions;
-    }
+  public void setFraudulentTransactions(List<ProcessedTransaction> fraudulentTransactions) {
+    this.fraudulentTransactions = fraudulentTransactions;
+  }
 
-    public void setMissingTransactions(List<ProcessedTransaction> missingTransactions) {
-        this.missingTransactions = missingTransactions;
-    }
+  public List<ProcessedTransaction> getMissingTransactions() {
+    return missingTransactions;
+  }
 
-    public Date getFrom() {
-        return from;
-    }
+  public void setMissingTransactions(List<ProcessedTransaction> missingTransactions) {
+    this.missingTransactions = missingTransactions;
+  }
 
-    public void setFrom(Date from) {
-        this.from = from;
-    }
+  public Date getFrom() {
+    return from;
+  }
 
-    public Date getTo() {
-        return to;
-    }
+  public void setFrom(Date from) {
+    this.from = from;
+  }
 
-    public void setTo(Date to) {
-        this.to = to;
-    }
+  public Date getTo() {
+    return to;
+  }
 
-    public String getFileGlobalId() {
-        return fileGlobalId;
-    }
+  public void setTo(Date to) {
+    this.to = to;
+  }
 
-    public void setFileGlobalId(String fileGlobalId) {
-        this.fileGlobalId = fileGlobalId;
-    }
+  public String getFileGlobalId() {
+    return fileGlobalId;
+  }
+
+  public void setFileGlobalId(String fileGlobalId) {
+    this.fileGlobalId = fileGlobalId;
+  }
 }

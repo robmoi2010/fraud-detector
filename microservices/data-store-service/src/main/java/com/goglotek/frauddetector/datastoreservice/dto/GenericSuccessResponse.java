@@ -1,42 +1,65 @@
+/*
+ *
+ *  * Copyright (C) 2025 Robert Moi, Goglotek LTD
+ *  *
+ *  * This file is part of the Fraud Detector System.
+ *  *
+ *  * The Fraud Detector System is free software: you can redistribute it and/or modify
+ *  * it under the terms of the GNU General Public License as published by
+ *  * the Free Software Foundation, either version 3 of the License, or
+ *  * (at your option) any later version.
+ *  *
+ *  * The Fraud Detector System is distributed in the hope that it will be useful,
+ *  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  * GNU General Public License for more details.
+ *  *
+ *  * You should have received a copy of the GNU General Public License
+ *  * along with the Fraud Detector System. If not, see <https://www.gnu.org/licenses/>.
+ *
+ *
+ */
+
 package com.goglotek.frauddetector.datastoreservice.dto;
 
 import java.util.Date;
 
 public class GenericSuccessResponse {
-    private int statusCode;
-    private String message;
-    private boolean success;
-    private Date serverTimestamp;
 
-    public int getStatusCode() {
-        return statusCode;
-    }
+  private int statusCode;
+  private String message;
+  private boolean success;
+  private Date serverTimestamp;
 
-    public void setStatusCode(int statusCode) {
-        this.statusCode = statusCode;
-    }
+  public int getStatusCode() {
+    return statusCode;
+  }
 
-    public String getMessage() {
-        return message;
-    }
+  public void setStatusCode(int statusCode) {
+    this.statusCode = statusCode;
+  }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+  public String getMessage() {
+    return message;
+  }
 
-    public boolean isSuccess() {
-        return success;
-    }
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
+  public boolean isSuccess() {
+    return success;
+  }
 
-    public Date getServerTimestamp() {
-        return serverTimestamp;
-    }
+  public void setSuccess(boolean success) {
+    this.success = success;
+  }
 
-    public void setServerTimestamp(Date serverTimestamp) {
-        this.serverTimestamp = serverTimestamp;
-    }
+  public Date getServerTimestamp() {
+    return serverTimestamp;
+  }
+
+  public void setServerTimestamp(Date serverTimestamp) {
+    this.serverTimestamp = serverTimestamp;
+  }
 }

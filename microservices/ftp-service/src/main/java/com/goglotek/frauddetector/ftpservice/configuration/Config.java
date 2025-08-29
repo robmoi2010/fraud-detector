@@ -1,3 +1,25 @@
+/*
+ *
+ *  * Copyright (C) 2025 Robert Moi, Goglotek LTD
+ *  *
+ *  * This file is part of the Fraud Detector System.
+ *  *
+ *  * The Fraud Detector System is free software: you can redistribute it and/or modify
+ *  * it under the terms of the GNU General Public License as published by
+ *  * the Free Software Foundation, either version 3 of the License, or
+ *  * (at your option) any later version.
+ *  *
+ *  * The Fraud Detector System is distributed in the hope that it will be useful,
+ *  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  * GNU General Public License for more details.
+ *  *
+ *  * You should have received a copy of the GNU General Public License
+ *  * along with the Fraud Detector System. If not, see <https://www.gnu.org/licenses/>.
+ *
+ *
+ */
+
 package com.goglotek.frauddetector.ftpservice.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -5,128 +27,129 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class Config {
-    @Value("${goglotek.ftp.remote_host}")
-    private String remoteHost;
-    @Value("${goglotek.ftp.username}")
-    private String username;
-    @Value("${goglotek.ftp.password}")
-    private String password;
-    @Value("${goglotek.ftp.port}")
-    private int port;
-    @Value("${goglotek.ftp.remote_folder}")
-    private String remoteFolder;
-    @Value("${goglotek.ftp.local_folder}")
-    private String localFolder;
-    @Value("${goglotek.ftp.local_root_folder}")
-    private String localRootFolder;
-    @Value("${goglotek.cryptography.encryption_key}")
-    private String encryptionKey;
-    @Value("${goglotek.cryptography.init_vector}")
-    private String initVector;
-    @Value("${goglotek.frauddetector.exchange}")
-    private String serviceExchange;
-    @Value("${goglotek.ftp.routing_key}")
-    private String ftpRoutingKey;
-    @Value("${goglotek.ftp.file_type}")
-    private String fileType;
 
-    public Config() {
+  @Value("${goglotek.ftp.remote_host}")
+  private String remoteHost;
+  @Value("${goglotek.ftp.username}")
+  private String username;
+  @Value("${goglotek.ftp.password}")
+  private String password;
+  @Value("${goglotek.ftp.port}")
+  private int port;
+  @Value("${goglotek.ftp.remote_folder}")
+  private String remoteFolder;
+  @Value("${goglotek.ftp.local_folder}")
+  private String localFolder;
+  @Value("${goglotek.ftp.local_root_folder}")
+  private String localRootFolder;
+  @Value("${goglotek.cryptography.encryption_key}")
+  private String encryptionKey;
+  @Value("${goglotek.cryptography.init_vector}")
+  private String initVector;
+  @Value("${goglotek.frauddetector.exchange}")
+  private String serviceExchange;
+  @Value("${goglotek.ftp.routing_key}")
+  private String ftpRoutingKey;
+  @Value("${goglotek.ftp.file_type}")
+  private String fileType;
 
-    }
+  public Config() {
 
-    public String getRemoteHost() {
-        return remoteHost;
-    }
+  }
 
-    public void setRemoteHost(String remoteHost) {
-        this.remoteHost = remoteHost;
-    }
+  public String getRemoteHost() {
+    return remoteHost;
+  }
 
-    public String getUsername() {
-        return username;
-    }
+  public void setRemoteHost(String remoteHost) {
+    this.remoteHost = remoteHost;
+  }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+  public String getUsername() {
+    return username;
+  }
 
-    public String getPassword() {
-        return password;
-    }
+  public void setUsername(String username) {
+    this.username = username;
+  }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+  public String getPassword() {
+    return password;
+  }
 
-    public int getPort() {
-        return port;
-    }
+  public void setPassword(String password) {
+    this.password = password;
+  }
 
-    public void setPort(int port) {
-        this.port = port;
-    }
+  public int getPort() {
+    return port;
+  }
 
-    public String getRemoteFolder() {
-        return remoteFolder;
-    }
+  public void setPort(int port) {
+    this.port = port;
+  }
 
-    public void setRemoteFolder(String remoteFolder) {
-        this.remoteFolder = remoteFolder;
-    }
+  public String getRemoteFolder() {
+    return remoteFolder;
+  }
 
-    public String getLocalFolder() {
-        return localFolder;
-    }
+  public void setRemoteFolder(String remoteFolder) {
+    this.remoteFolder = remoteFolder;
+  }
 
-    public void setLocalFolder(String localFolder) {
-        this.localFolder = localFolder;
-    }
+  public String getLocalFolder() {
+    return localFolder;
+  }
 
-    public String getEncryptionKey() {
-        return encryptionKey;
-    }
+  public void setLocalFolder(String localFolder) {
+    this.localFolder = localFolder;
+  }
 
-    public void setEncryptionKey(String encryptionKey) {
-        this.encryptionKey = encryptionKey;
-    }
+  public String getEncryptionKey() {
+    return encryptionKey;
+  }
 
-    public String getInitVector() {
-        return initVector;
-    }
+  public void setEncryptionKey(String encryptionKey) {
+    this.encryptionKey = encryptionKey;
+  }
 
-    public void setInitVector(String initVector) {
-        this.initVector = initVector;
-    }
+  public String getInitVector() {
+    return initVector;
+  }
 
-    public String getLocalRootFolder() {
-        return localRootFolder;
-    }
+  public void setInitVector(String initVector) {
+    this.initVector = initVector;
+  }
 
-    public void setLocalRootFolder(String localRootFolder) {
-        this.localRootFolder = localRootFolder;
-    }
+  public String getLocalRootFolder() {
+    return localRootFolder;
+  }
 
-    public String getServiceExchange() {
-        return serviceExchange;
-    }
+  public void setLocalRootFolder(String localRootFolder) {
+    this.localRootFolder = localRootFolder;
+  }
 
-    public void setServiceExchange(String serviceExchange) {
-        this.serviceExchange = serviceExchange;
-    }
+  public String getServiceExchange() {
+    return serviceExchange;
+  }
 
-    public String getFtpRoutingKey() {
-        return ftpRoutingKey;
-    }
+  public void setServiceExchange(String serviceExchange) {
+    this.serviceExchange = serviceExchange;
+  }
 
-    public void setFtpRoutingKey(String ftpRoutingKey) {
-        this.ftpRoutingKey = ftpRoutingKey;
-    }
+  public String getFtpRoutingKey() {
+    return ftpRoutingKey;
+  }
 
-    public String getFileType() {
-        return fileType;
-    }
+  public void setFtpRoutingKey(String ftpRoutingKey) {
+    this.ftpRoutingKey = ftpRoutingKey;
+  }
 
-    public void setFileType(String fileType) {
-        this.fileType = fileType;
-    }
+  public String getFileType() {
+    return fileType;
+  }
+
+  public void setFileType(String fileType) {
+    this.fileType = fileType;
+  }
 }
