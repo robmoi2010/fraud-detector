@@ -1,0 +1,57 @@
+{
+  "file_type": "csv",
+  "has_headers": true,
+  "date_format": "yyyy-MM-dd HH:mm:ss",
+  "columns": [
+    {
+      "name": "RECEIPT_NUMBER",
+      "data_type": "text",
+      "file_index": 6,
+      "is_amount": false,
+      "is_transaction_id": true,
+      "is_transaction_timestamp": false,
+      "is_provider_client_account": false,
+      "is_group_account": false
+    },
+    {
+      "name": "CREDIT_AMOUNT",
+      "data_type": "number",
+      "file_index": 12,
+      "is_amount": true,
+      "is_transaction_id": false,
+      "is_transaction_timestamp": false,
+      "is_provider_client_account": false,
+      "is_group_account": false
+    },
+    {
+      "name": "END_TIMESTAMP",
+      "data_type": "timestamp",
+      "file_index": 9,
+      "is_amount": false,
+      "is_transaction_id": false,
+      "is_transaction_timestamp": true,
+      "is_provider_client_account": false,
+      "is_group_account": false
+    },
+    {
+      "name": "PRIMARY_PARTY_IDENTIFIER",
+      "data_type": "string",
+      "file_index": 19,
+      "is_amount": false,
+      "is_transaction_id": false,
+      "is_transaction_timestamp": false,
+      "is_provider_client_account": true,
+      "is_group_account": false
+    },
+    {
+      "name": "RECEIVER_PARTY_IDENTIFIER",
+      "data_type": "string",
+      "file_index": 20,
+      "is_amount": false,
+      "is_transaction_id": false,
+      "is_transaction_timestamp": false,
+      "is_provider_client_account": false,
+      "is_group_account": true
+    }
+  ]
+}

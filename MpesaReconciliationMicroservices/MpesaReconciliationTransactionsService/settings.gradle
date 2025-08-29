@@ -1,3 +1,0 @@
-rootProject.name = 'MpesaReconciliationTransactionsService'
-include ':GoglotekCypher'
-project(':GoglotekCypher').projectDir = new File(settingsDir, '../GoglotekCypher')
