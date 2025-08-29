@@ -14,17 +14,22 @@ import com.goglotek.frauddetector.datastoreservice.service.ProcessingService;
 
 @Service
 public class ProcessingServiceImpl implements ProcessingService {
-	@Autowired
-	private ProcessingRepository processingRepository;
+    @Autowired
+    private ProcessingRepository processingRepository;
 
-	@Override
-	public List<Processing> findAllPaged(Integer page, Integer limit, String order) {
-		return processingRepository.findAll(PageRequest.of(page, limit, Sort.by(order))).getContent();
-	}
+    @Override
+    public List<Processing> findAllPaged(Integer page, Integer limit, String order) {
+        return processingRepository.findAll(PageRequest.of(page, limit, Sort.by(order))).getContent();
+    }
 
-	@Override
-	public Optional<Processing> findById(Long reconId) {
-		return processingRepository.findById(reconId);
-	}
+    @Override
+    public Optional<Processing> findById(Long reconId) {
+        return processingRepository.findById(reconId);
+    }
+
+    @Override
+    public Processing save(Processing processing) {
+        return processingRepository.save(processing);
+    }
 
 }

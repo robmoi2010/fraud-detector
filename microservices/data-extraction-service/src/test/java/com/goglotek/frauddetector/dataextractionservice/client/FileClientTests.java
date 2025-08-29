@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -19,7 +20,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class FileClientTests extends AbstractTests {
-    @MockitoBean
+    @MockitoSpyBean
     Config config;
 
     @Autowired
@@ -40,7 +41,7 @@ public class FileClientTests extends AbstractTests {
     public void shouldCreateRetrieveAndDeleteFile() throws GoglotekException, IOException {
         //tests save file
         byte[] content = fileContent.getBytes();
-        fileClient.saveFile(content, fileName, FileType.UNPROCESSED);
+        fileClient.saveFile(content, Paths.get(rootFolder + FileSystems.getDefault().getSeparator() + fileName).toAbsolutePath().toString(), FileType.UNPROCESSED);
         byte[] b = Files.readAllBytes(Paths.get(rootFolder + FileSystems.getDefault().getSeparator() + fileName));
         assertTrue(b != null);
         assertTrue(fileContent.equals(new String(b)));
@@ -51,7 +52,7 @@ public class FileClientTests extends AbstractTests {
         assertTrue(fileContent.equals(new String(b2)));
 
         //test delete file
-        fileClient.deleteFile(fileName);
+        fileClient.deleteFile(Paths.get(rootFolder + FileSystems.getDefault().getSeparator() + fileName).toAbsolutePath().toString());
         try {
             byte[] b3 = Files.readAllBytes(Paths.get(rootFolder + FileSystems.getDefault().getSeparator() + fileName));
             assertTrue(b3 == null);

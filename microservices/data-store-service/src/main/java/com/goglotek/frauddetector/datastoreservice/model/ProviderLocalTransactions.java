@@ -46,11 +46,11 @@ public class ProviderLocalTransactions implements Serializable {
 	private Long processingId;
 
 	@OneToOne
-	@JoinColumn(name = "local_transactions_id", insertable = false, updatable = false, nullable = true)
+	@JoinColumn(name = "local_transactions_id", insertable = true, updatable = true, nullable = true)
 	private LocalTransactions localTransactions;
 
 	@OneToOne
-	@JoinColumn(name = "provider_transactions_id", insertable = false, updatable = false, nullable = true)
+	@JoinColumn(name = "provider_transactions_id", insertable = true, updatable = true, nullable = true)
 	private ProviderTransactions providerTransactions;
 
 	public Long getProviderLocalId() {

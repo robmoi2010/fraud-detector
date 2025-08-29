@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import com.goglotek.frauddetector.datastoreservice.dto.FilterModel;
+import com.goglotek.frauddetector.datastoreservice.dto.ProcessedTransactionDto;
+import com.goglotek.frauddetector.datastoreservice.exception.GoglotekException;
 import com.goglotek.frauddetector.datastoreservice.model.ProviderLocalTransactions;
 
 public interface ProviderLocalTransactionsService {
@@ -19,4 +21,5 @@ public interface ProviderLocalTransactionsService {
 	List<ProviderLocalTransactions> findAllFilteredPaged(Integer page, Integer limit, String order, String direction,
 			List<FilterModel> filterModel);
 
+    void storeProcessedTransactions(ProcessedTransactionDto processedTrans) throws GoglotekException;
 }

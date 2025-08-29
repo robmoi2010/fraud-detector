@@ -5,8 +5,7 @@ import com.goglotek.frauddetector.dataprocessorservice.dto.FileDto;
 import com.goglotek.frauddetector.dataprocessorservice.dto.ProcessedTransactionDto;
 import com.goglotek.frauddetector.dataprocessorservice.dto.Transaction;
 import com.goglotek.frauddetector.dataprocessorservice.service.DataStoreService;
-import org.junit.jupiter.api.BeforeEach;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -18,7 +17,7 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 public abstract class AbstractTests {
-    @MockBean
+    @MockitoBean
     protected DataStoreService dataStoreService;
     protected List<Transaction> localTransactions;
     protected List<Transaction> providerTransactions;
@@ -26,7 +25,7 @@ public abstract class AbstractTests {
     protected int providerTransCount = 10;
     private Date timestamp;
 
-    public void startUp() {
+    public void startUp() throws Exception {
         timestamp = new Date();
         //create local transactions
         localTransactions = createLocalTransactions();

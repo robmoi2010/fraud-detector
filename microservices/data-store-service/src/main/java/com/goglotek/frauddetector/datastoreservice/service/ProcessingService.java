@@ -8,8 +8,10 @@ import java.util.Optional;
 
 public interface ProcessingService {
 
-	List<Processing> findAllPaged(Integer page, Integer limit, String order);
+    List<Processing> findAllPaged(Integer page, Integer limit, String order);
 
-	Optional<Processing> findById(Long reconId);
+    Optional<Processing> findById(Long reconId);
+
+    Processing save(Processing processing);
 
 }

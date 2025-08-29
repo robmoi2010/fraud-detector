@@ -144,7 +144,7 @@ public class SecurityConfig {
                 .redirectUri(config.getRedirectUrl())
                 .tokenSettings(TokenSettings.builder().accessTokenTimeToLive(Duration.ofSeconds(config.getAccessTokenValiditySeconds())).build())
                 .scope("READ")
-                .scope("USER")
+                .scope(config.getMachineRoleName())
                 .scope("WRITE")
                 .build();
 

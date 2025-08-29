@@ -44,6 +44,39 @@ public class Config {
     @Value("${goglotek.core.system_timestamp_format}")
     private String internalTimestampFormat;
 
+    @Value("${goglotek.processedtransactions.endpoint}")
+    private String processedTransEndpoint;
+
+    @Value("${goglotek.cryptography.encryption_key}")
+    private String encryptionKey;
+
+    @Value("${goglotek.cryptography.init_vector}")
+    private String initVector;
+
+    public String getEncryptionKey() {
+        return encryptionKey;
+    }
+
+    public void setEncryptionKey(String encryptionKey) {
+        this.encryptionKey = encryptionKey;
+    }
+
+    public String getInitVector() {
+        return initVector;
+    }
+
+    public void setInitVector(String initVector) {
+        this.initVector = initVector;
+    }
+
+    public String getProcessedTransEndpoint() {
+        return processedTransEndpoint;
+    }
+
+    public void setProcessedTransEndpoint(String processedTransEndpoint) {
+        this.processedTransEndpoint = processedTransEndpoint;
+    }
+
     public String getInternalTimestampFormat() {
         return internalTimestampFormat;
     }

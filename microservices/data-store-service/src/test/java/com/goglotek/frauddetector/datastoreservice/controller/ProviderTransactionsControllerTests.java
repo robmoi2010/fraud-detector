@@ -10,9 +10,11 @@ import com.goglotek.frauddetector.datastoreservice.model.Files;
 import com.goglotek.frauddetector.datastoreservice.service.FilesService;
 import com.goglotek.frauddetector.datastoreservice.service.ProviderTransactionsService;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
@@ -22,6 +24,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -51,13 +54,9 @@ public class ProviderTransactionsControllerTests extends AbstractTest {
     private List<CreateProviderTransactionsDto> transactions = new ArrayList<>();
     private final int TOTAL_TRANS = 10;
 
-    @BeforeAll
+    @BeforeEach
     public void setUp() throws GoglotekException {
         transactions = createTransactions();
-    }
-
-    @Test
-    public void shouldSendTransactionsSuccessfully() throws Exception {
         //set up mock objects
         Files file = new Files();
         file.setFileName(fileName);
@@ -68,15 +67,19 @@ public class ProviderTransactionsControllerTests extends AbstractTest {
         when(config.getEncryptionInitVector()).thenReturn(initVector);
         when(config.getEncryptionKey()).thenReturn(encryptionKey);
 
-        doNothing().when(providerTransactionsService).createAll(anyList(), any());
+        when(providerTransactionsService.createAll(anyList(), any())).thenReturn(List.of());
 
+    }
+
+    @Test
+    public void shouldSendTransactionsSuccessfully() throws Exception {
 
         String uri = "/providertransactions/create/{file_global_id}";
         String trans = objectMapper.writeValueAsString(transactions);
         String encrypted = Base64.getEncoder().encodeToString(cryptography.encrypt(trans.getBytes(), config.getEncryptionKey(), config.getEncryptionInitVector()));
 
-        mvc.perform(post(uri, fileId).header("Authorization", "Bearer " + token)
-                        .content(encrypted).accept(MediaType.APPLICATION_JSON_VALUE))
+        mvc.perform(post(uri, fileId)
+                        .content(encrypted).accept(MediaType.APPLICATION_JSON_VALUE).with(jwt().authorities(new SimpleGrantedAuthority("ROLE_USER"))))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("success")));
     }
@@ -88,8 +91,8 @@ public class ProviderTransactionsControllerTests extends AbstractTest {
         String trans = objectMapper.writeValueAsString(transactions);
         String encrypted = Base64.getEncoder().encodeToString(cryptography.encrypt(trans.getBytes(), config.getEncryptionKey(), config.getEncryptionInitVector()));
 
-        mvc.perform(post(uri, fileId).header("Authorization", "Bearer " + tokenWithoutRoles)
-                        .content(encrypted).accept(MediaType.APPLICATION_JSON_VALUE))
+        mvc.perform(post(uri, fileId)
+                        .content(encrypted).accept(MediaType.APPLICATION_JSON_VALUE).with(jwt().authorities(new SimpleGrantedAuthority("ROLE_XYZ"))))
                 .andExpect(status().isForbidden());
     }
 

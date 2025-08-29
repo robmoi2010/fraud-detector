@@ -1,8 +1,8 @@
-package com.goglotek.frauddetector.dataprocessorservice.dto;
+package com.goglotek.frauddetector.datastoreservice.dto;
 
 import java.util.Date;
 
-public class Transaction {
+public class ProcessedTransaction {
     private Long transactionDsId;
     private Date createdOn;
     private String id;
@@ -12,12 +12,12 @@ public class Transaction {
     private String groupAccount;
     private String clientAccount;
 
-    public Long getTransactionDsId() {
-        return transactionDsId;
+    public String getClientAccount() {
+        return clientAccount;
     }
 
-    public void setTransactionDsId(Long transactionDsId) {
-        this.transactionDsId = transactionDsId;
+    public void setClientAccount(String clientAccount) {
+        this.clientAccount = clientAccount;
     }
 
     public Date getCreatedOn() {
@@ -56,10 +56,6 @@ public class Transaction {
         return transactionTimestamp;
     }
 
-    public void setTransactionTimestamp(Date transactionTimestamp) {
-        this.transactionTimestamp = transactionTimestamp;
-    }
-
     public String getGroupAccount() {
         return groupAccount;
     }
@@ -68,11 +64,15 @@ public class Transaction {
         this.groupAccount = groupAccount;
     }
 
-    public String getClientAccount() {
-        return clientAccount;
+    public Long getTransactionDsId() {
+        return transactionDsId;
     }
 
-    public void setClientAccount(String clientAccount) {
-        this.clientAccount = clientAccount;
+    public void setTransactionDsId(Long transactionDsId) {
+        this.transactionDsId = transactionDsId;
+    }
+
+    public void setTransactionTimestamp(Date transactionTimestamp) {
+        this.transactionTimestamp = transactionTimestamp;
     }
 }

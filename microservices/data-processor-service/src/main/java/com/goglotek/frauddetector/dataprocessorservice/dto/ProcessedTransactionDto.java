@@ -6,6 +6,8 @@ import java.util.List;
 public class ProcessedTransactionDto {
     private String fileGlobalId;
     private Date dateProcessed;
+    private Date from;
+    private Date to;
     private List<Transaction> fraudulentTransactions;
     private List<Transaction> missingTransactions;
     private List<Transaction> invalidAmountTransactions;
@@ -66,5 +68,21 @@ public class ProcessedTransactionDto {
 
     public void setFileGlobalId(String fileGlobalId) {
         this.fileGlobalId = fileGlobalId;
+    }
+
+    public Date getFrom() {
+        return from;
+    }
+
+    public void setFrom(Date from) {
+        this.from = from;
+    }
+
+    public Date getTo() {
+        return to;
+    }
+
+    public void setTo(Date to) {
+        this.to = to;
     }
 }

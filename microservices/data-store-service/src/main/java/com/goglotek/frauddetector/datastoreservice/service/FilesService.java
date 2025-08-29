@@ -29,4 +29,6 @@ public interface FilesService {
     public Files createFile(CreateFileDto fileDto);
 
     public Files getFileByGlobalId(String globalId) throws GoglotekException;
+
+    void save(Files file);
 }

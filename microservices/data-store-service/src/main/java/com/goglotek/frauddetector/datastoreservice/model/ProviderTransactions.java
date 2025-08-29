@@ -31,13 +31,17 @@ public class ProviderTransactions implements Serializable {
 
     @Column(name = "client_account", nullable = false)
     private String clientAccount;
+
     @Column(name = "transaction_time", nullable = false)
     private Date transactionTime;
+
     //tune length depending on the size of your transactions extra details
     @Column(name = "details", nullable = false, length = 10000)
     private String details;
+
     @Column(name = "amount", nullable = false)
     private Double amount;
+
     @Column(name = "file_id", nullable = false)
     private Long fileId;
 

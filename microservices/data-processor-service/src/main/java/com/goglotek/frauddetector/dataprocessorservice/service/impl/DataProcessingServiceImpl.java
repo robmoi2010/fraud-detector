@@ -7,14 +7,18 @@ import com.goglotek.frauddetector.dataprocessorservice.dto.ProcessedTransactionD
 import com.goglotek.frauddetector.dataprocessorservice.dto.Transaction;
 import com.goglotek.frauddetector.dataprocessorservice.service.DataProcessingService;
 import com.goglotek.frauddetector.dataprocessorservice.service.DataStoreService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+
 //TODO: for paying clients, batch transaction processing for large transactions. NB: If a companies transactions are to large to process once then they should contract us for a custom proper implementation.
 @Service
 public class DataProcessingServiceImpl implements DataProcessingService {
+    static Logger logger = LogManager.getLogger(DataProcessingServiceImpl.class);
     @Autowired
     private DataStoreService dataStoreService;
 
@@ -23,38 +27,44 @@ public class DataProcessingServiceImpl implements DataProcessingService {
 
     @Override
     public void processData(List<FileDto> files) throws Exception {
-        List<Transaction> fraudulentTransactions = new ArrayList<>();
-        List<Transaction> missingTransactions = new ArrayList<>();
         for (FileDto file : files) {
-            //get local and provider transactions from server
-            List<Transaction> providerTrans = dataStoreService.getProviderTransactions(file);
-            List<Transaction> localTrans = dataStoreService.getLocalTransactions(file);
+            try {
+                logger.info("started processing transactions of file " + file.getFileName());
+                //get local and provider transactions from server
+                List<Transaction> providerTrans = dataStoreService.getProviderTransactions(file);
+                List<Transaction> localTrans = dataStoreService.getLocalTransactions(file);
 
-            //process transactions and get fraudulent and missing transactions
-            Map<DiscrepancyType, List<Transaction>> fraudulentResults = getFraudulentTransactions(providerTrans, localTrans);
-            Map<DiscrepancyType, List<Transaction>> missingResults = getMissingTransactions(providerTrans, localTrans);
+                //process transactions and get fraudulent and missing transactions
+                Map<DiscrepancyType, List<Transaction>> fraudulentResults = getFraudulentTransactions(providerTrans, localTrans);
+                Map<DiscrepancyType, List<Transaction>> missingResults = getMissingTransactions(providerTrans, localTrans);
 
-            //send processed transactions to data store
-            ProcessedTransactionDto processed = new ProcessedTransactionDto();
-            processed.setDateProcessed(new Date());
-            processed.setFileGlobalId(file.getFileId());
-            processed.setFraudulentTransactions(fraudulentResults.get(DiscrepancyType.FRAUDULENT));
-            processed.setMissingTransactions(missingResults.get(DiscrepancyType.MISSING));
+                //send processed transactions to data store
+                ProcessedTransactionDto processed = new ProcessedTransactionDto();
+                processed.setFrom(file.getFromDate());
+                processed.setTo(file.getToDate());
+                processed.setDateProcessed(new Date());
+                processed.setFileGlobalId(file.getFileId());
+                processed.setFraudulentTransactions(fraudulentResults.get(DiscrepancyType.FRAUDULENT));
+                processed.setMissingTransactions(missingResults.get(DiscrepancyType.MISSING));
 
-            List<Transaction> invalidAmountTrans = fraudulentResults.get(DiscrepancyType.INVALID_AMOUNT);
-            invalidAmountTrans.addAll(missingResults.get(DiscrepancyType.INVALID_AMOUNT));
-            processed.setInvalidAmountTransactions(invalidAmountTrans);
+                List<Transaction> invalidAmountTrans = fraudulentResults.get(DiscrepancyType.INVALID_AMOUNT);
+                invalidAmountTrans.addAll(missingResults.get(DiscrepancyType.INVALID_AMOUNT));
+                processed.setInvalidAmountTransactions(invalidAmountTrans);
 
-            List<Transaction> invalidClientAccTrans = fraudulentResults.get(DiscrepancyType.INVALID_CLIENT_ID);
-            invalidClientAccTrans.addAll(missingResults.get(DiscrepancyType.INVALID_CLIENT_ID));
-            processed.setInvalidClientAccountTransactions(invalidClientAccTrans);
+                List<Transaction> invalidClientAccTrans = fraudulentResults.get(DiscrepancyType.INVALID_CLIENT_ID);
+                invalidClientAccTrans.addAll(missingResults.get(DiscrepancyType.INVALID_CLIENT_ID));
+                processed.setInvalidClientAccountTransactions(invalidClientAccTrans);
 
-            List<Transaction> invalidTimestampTrans = fraudulentResults.get(DiscrepancyType.INVALID_TIMESTAMP);
-            invalidTimestampTrans.addAll(missingResults.get(DiscrepancyType.INVALID_TIMESTAMP));
-            processed.setInvalidTimestampTransactions(invalidTimestampTrans);
+                List<Transaction> invalidTimestampTrans = fraudulentResults.get(DiscrepancyType.INVALID_TIMESTAMP);
+                invalidTimestampTrans.addAll(missingResults.get(DiscrepancyType.INVALID_TIMESTAMP));
+                processed.setInvalidTimestampTransactions(invalidTimestampTrans);
 
-            //send processed data back to server
-            dataStoreService.storeProcessedTransactionData(processed);
+                //send processed data back to server
+                dataStoreService.storeProcessedTransactionData(processed);
+                logger.info("completed processing transactions of file " + file.getFileName());
+            } catch (Exception e) {
+                logger.error(e.getMessage(), e);
+            }
         }
     }
 

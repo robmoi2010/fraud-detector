@@ -21,20 +21,20 @@ public class DataProcessingServiceImplTests extends AbstractTests {
     private DataProcessingServiceImpl dataProcessingService;
 
     @BeforeEach
-    public void setUp() {
+    public void setUp() throws Exception {
         super.startUp();
 
     }
 
     @Test
-    public void shouldRetrieveLocalTransactions() {
+    public void shouldRetrieveLocalTransactions() throws Exception {
         List<Transaction> tr = dataStoreService.getLocalTransactions(new FileDto());
         assertTrue(tr != null);
         assertTrue(tr.size() == localTransCount);
     }
 
     @Test
-    public void shouldRetrieveProviderTransactions() {
+    public void shouldRetrieveProviderTransactions() throws Exception {
         List<Transaction> tr = dataStoreService.getProviderTransactions(new FileDto());
         assertTrue(tr != null);
         assertTrue(tr.size() == providerTransCount);

@@ -146,4 +146,9 @@ public class FilesServiceImpl implements FilesService {
         return filesRepository.findFirstByGlobalId(globalId).orElseThrow(() -> new FileNotFoundException("File with global id " + globalId + " not found..."));
     }
 
+    @Override
+    public void save(Files file) {
+        filesRepository.save(file);
+    }
+
 }
