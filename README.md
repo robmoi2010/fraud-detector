@@ -81,8 +81,8 @@ The system follows a **microservice architecture**, with the following core serv
 | UI                  | Basic (test only)           | Full production-ready UI                       |
 | Test Coverage       | Standard                    | Extensive test cases & enterprise validation   |
 
-## Donation
+## 💰 Donation
 **Support this project:** [💖 Sponsor](https://github.com/sponsors/robmoi2010) · [💸 PayPal](https://www.paypal.com/donate/?hosted_button_id=P4FZ9XQ7K3GY2)
 
-## Contact
+## 📞 Contact
 Website: www.goglotek.com email: robmoi2010@gmail.com mobile: +254724116115
