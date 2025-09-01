@@ -80,3 +80,6 @@ The system follows a **microservice architecture**, with the following core serv
 | Security            | Basic                       | Advanced (DoS mitigation, rate limiting, etc.) |
 | UI                  | Basic (test only)           | Full production-ready UI                       |
 | Test Coverage       | Standard                    | Extensive test cases & enterprise validation   |
+
+## Donation
+**Support this project:** [💖 Sponsor](https://github.com/sponsors/robmoi2010) · [💸 PayPal](https://www.paypal.com/donate/?hosted_button_id=P4FZ9XQ7K3GY2)
