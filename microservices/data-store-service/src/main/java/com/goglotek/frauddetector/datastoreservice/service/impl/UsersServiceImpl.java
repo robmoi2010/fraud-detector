@@ -185,7 +185,7 @@ public class UsersServiceImpl implements UsersService {
       authorities.add(new SimpleGrantedAuthority(r.getName()));
       List<Permissions> perm = r.getPermissions();
       perm.forEach(p -> {
-        authorities.add(new SimpleGrantedAuthority(r.getName() + "." + p.getName()));
+        authorities.add(new SimpleGrantedAuthority( p.getName()));
       });
     });
     return authorities;
