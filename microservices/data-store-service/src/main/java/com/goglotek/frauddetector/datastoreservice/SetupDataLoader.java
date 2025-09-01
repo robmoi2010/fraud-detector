@@ -68,6 +68,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
       user.setCreatedOn(new Date());
       user.setCredentialsNotExpired(true);
       user.setActive(true);
+
       userService.create(user);
     }
     if (userService.findByEmail("user1@gmail.com") == null) {
@@ -79,32 +80,51 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
       u.setAccountNotLocked(true);
       u.setCreatedOn(new Date());
       u.setCredentialsNotExpired(true);
+
       Permissions read = new Permissions();
       read.setName("READ");
+
       Permissions write = new Permissions();
       write.setName("WRITE");
-      permissionService.createAll(Arrays.asList(read, write));
+
+      Permissions delete = new Permissions();
+      write.setName("DELETE");
+
+      Permissions update = new Permissions();
+      write.setName("UPDATE");
+
+      permissionService.createAll(Arrays.asList(read, write, delete, update));
+
       List<Permissions> adminPerm = new ArrayList<Permissions>();
       adminPerm.add(write);
       adminPerm.add(read);
+      adminPerm.add(delete);
+      adminPerm.add(update);
+
       List<Permissions> userPerm = new ArrayList<Permissions>();
       userPerm.add(read);
+
       List<Role> roles = new ArrayList<Role>();
-      Role admin = new Role();
-      admin.setName("ROLE_SUPER_ADMIN");
-      admin.setPermissions(adminPerm);
-      roles.add(admin);
-      Role user = new Role();
-      user.setName("ROLE_USER");
-      user.setPermissions(adminPerm);
-      roles.add(user);
+
+      Role adminRole = new Role();
+      adminRole.setName("ROLE_SUPER_ADMIN");
+      adminRole.setPermissions(adminPerm);
+      roles.add(adminRole);
+
+      Role userRole = new Role();
+      userRole.setName("ROLE_USER");
+      userRole.setPermissions(userPerm);
+      roles.add(userRole);
+
       roleService.createAll(roles);
+
       u.setRoles(roles);
       u.setFirstName("user1");
       u.setLastName("user1");
       u.setCreatedOn(new Date());
       u.setPassword(encoder.encode("password"));
       userService.create(u);
+
     }
   }
 }
